@@ -7,15 +7,15 @@ const httpLink = new HttpLink({
 });
 
 const authLink = new SetContextLink((prevContext) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token")
 
   return {
     headers: {
       ...prevContext.headers,
       authorization: token ? `Bearer ${token}` : "",
     },
-  };
-});
+  }
+})
 
 export const client = new ApolloClient({
   link: from([authLink, httpLink]),
