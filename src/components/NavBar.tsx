@@ -8,7 +8,7 @@ export function NavBar() {
 
   function handleLogout() {
     logout();
-    navigate("/login");
+    navigate("/");
   }
 
   return (
