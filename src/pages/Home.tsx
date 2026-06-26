@@ -4,7 +4,7 @@ import { ProductCard } from '../components/ProductsCard'
 import { useProducts } from '../hooks/useProducts'
 import type { Product } from '../types/product.types'
 
-export function Home() {
+export function HomeUser() {
   const { products, loading, error } = useProducts()
   const [search, setSearch] = useState('')
 

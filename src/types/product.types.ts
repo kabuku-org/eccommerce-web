@@ -4,8 +4,8 @@ export type Product = {
   description: string
   price: number
   stock: number
-  image_url: string
-  created_at: string
+  imageUrl: string
+  createdAt: string
 }
 
 export type CreateProductInput = {
@@ -13,7 +13,7 @@ export type CreateProductInput = {
     description: string
     price: number
     stock: number
-    image_url: string
+    imageUrl: string
 }
 
 export type UpdateProductInput = {
@@ -21,5 +21,5 @@ export type UpdateProductInput = {
     description?: string
     price?: number
     stock?: number
-    image_url?: string
+    imageUrl?: string
 }

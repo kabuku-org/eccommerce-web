@@ -9,8 +9,8 @@ export const GET_PRODUCTS = gql`
       description
       price
       stock
-      image_url
-      created_at
+      imageUrl
+      
     }
   }
 `
@@ -23,8 +23,8 @@ export const GET_PRODUCT = gql`
       description
       price
       stock
-      image_url
-      created_at
+      imageUrl
+      
     }
   }
 `
@@ -37,8 +37,8 @@ export const CREATE_PRODUCT = gql`
       description
       price
       stock
-      image_url
-      created_at
+      imageUrl
+      createdAt
     }
   }
 `
@@ -51,8 +51,8 @@ export const UPDATE_PRODUCT = gql`
       description
       price
       stock
-      image_url
-      created_at
+      imageUrl
+      createdAt
     }
   }
 `
