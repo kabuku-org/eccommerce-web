@@ -1,16 +1,22 @@
 import  {useAuthStore}  from "../../store/auth.store";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function ProtectedRoutes() {
 
-    if (!useAuthStore.getState().token) {
-        useAuthStore.getState().logout()// Clear the auth store
-        //then navigate to login page
-        const navigate = useNavigate();
-        navigate('/login');
-    }
-    else {
-        return null; // or return the protected component
-    }
 
-}
+    const navigate = useNavigate();
+    const token = useAuthStore((state) => state.token);
+
+    
+        useEffect(() => {
+            // if there no token, user is not authenticated, so redirect to login page
+            if (!token) {
+                navigate('/');
+            }
+        }, [token , navigate]);
+        
+        //if authiticated then rerender the children components
+        return null;
+    }
+    

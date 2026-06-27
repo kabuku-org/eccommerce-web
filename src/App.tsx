@@ -18,14 +18,15 @@ export function App() {
         <Route path="/signup" element={<Signup />} />
        
        {/* Add protected routes here */}
-       
+        <Route element={<ProtectedRoutes />}>
           <Route path="/home" element={<HomeUser />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/dashboard" element={<Dashboard />} />
           {/* Add more protected routes as needed */}
-        
-
+        </Route>
       </Routes>
     </BrowserRouter>
   )
 }
+       
+  
