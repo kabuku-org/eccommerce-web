@@ -25,12 +25,12 @@ export function useProducts() {
     await CreateProductMutation({ variables: { input } })
   }
 
-  async function updateProduct(id: string, input: UpdateProductInput) {
-    await UpdateProductMutation({ variables: { id, input } })
+  async function updateProduct(productId: string, input: UpdateProductInput) {
+    await UpdateProductMutation({ variables: { productId, input } })
   }
 
-  async function deleteProduct(id: string) {
-    await DeleteProductMutation({ variables: { id } })
+  async function deleteProduct(productId : string) {
+    await DeleteProductMutation({ variables: { productId } })
   }
 
   return {
