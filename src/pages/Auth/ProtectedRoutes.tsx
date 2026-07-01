@@ -1,5 +1,5 @@
 import  {useAuthStore}  from "../../store/auth.store";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export default function ProtectedRoutes() {
@@ -17,6 +17,6 @@ export default function ProtectedRoutes() {
         }, [token , navigate]);
         
         //if authiticated then rerender the children components
-        return null;
+        return token ? <Outlet /> : null;
     }
     
