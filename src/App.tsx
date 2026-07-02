@@ -2,10 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Login } from './pages/Auth/Login'
 import { Signup } from './pages/Auth/Signup'
 import ProtectedRoutes from './pages/Auth/ProtectedRoutes'
-import {HomeUser} from './pages/Home'
-
+import { HomeUser } from './pages/Home'
 import { Cart } from './pages/cart'
-import { Dashboard} from './pages/Auth/DashBoard'
 
 
 
@@ -21,12 +19,11 @@ export function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/home" element={<HomeUser />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Dashboard features are now embedded in /home based on user role */}
           {/* Add more protected routes as needed */}
         </Route>
       </Routes>
     </BrowserRouter>
   )
 }
-       
-  
+

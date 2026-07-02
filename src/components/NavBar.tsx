@@ -28,16 +28,6 @@ export function NavBar() {
           Cart
         </Link>
 
-        {/* Only admin see dashboard link */}
-        {user?.role === 'ADMIN' ? (
-          <Link
-            to="/dashboard"
-            className="hover:text-stone-300 transition-colors"
-          >
-            Dashboard
-          </Link>
-        ) : null}
-
         {/* User info + logout */}
         {user ? (
           <div className="flex items-center gap-3">

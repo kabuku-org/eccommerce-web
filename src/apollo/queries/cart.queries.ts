@@ -3,12 +3,12 @@ import type {CartItem} from '../../types/cart.types'
 
 export const GET_MY_CART = gql`
   query GetMyCart {
-    mycart {
+    myCart {
     
         id
-        user_id
+        userId
         items {
-        product_id
+        productId
         quantity
         price 
         name
@@ -22,9 +22,9 @@ export const ADD_TO_CART = gql`
 mutation AddToCart($productId: String!) {
   addToCart(productId: $productId) {
     id 
-    user_id
+    userId
     items {
-      product_id
+      productId
       quantity
       price
       name
@@ -38,9 +38,9 @@ export const REMOVE_FROM_CART = gql`
 mutation RemoveFromCart($productId: String! , $total: Float!) {
   removeFromCart(productId: $productId, total: $total ) {
     id
-    user_id
+    userId
     items {
-      product_id
+      productId
       quantity
       price
       name
@@ -54,9 +54,9 @@ export const CLEAR_CART = gql`
 mutation ClearCart {
   clearCart {
     id
-    user_id
+    userId
     items {
-      product_id
+      productId
       quantity
       price
       name
@@ -83,7 +83,7 @@ export type CartData = {
 }
 
 export type GetMyCartResponse = {
-  mycart: CartData
+  myCart: CartData
 }
 
 export type AddToCartResponse = {

@@ -63,7 +63,7 @@ export const useCart = () => {
     }
 
     //cart info for navbar use case
-    const cart = data?.mycart ?? null
+    const cart = data?.myCart ?? null
 
 
     const itemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
