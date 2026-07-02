@@ -68,14 +68,14 @@ if (!cart || itemCount === 0) {
         <h1 className="text-2xl font-semibold text-stone-900 mb-6">Your Cart</h1>
         <ul className="space-y-4">
           {cart.items.map((item) => (
-            <li key={item.product_id} className="flex justify-between items-center bg-white p-4 rounded shadow">
+            <li key={item.productId} className="flex justify-between items-center bg-white p-4 rounded shadow">
               <div>
                 <h2 className="text-lg font-semibold text-stone-900">{item.name}</h2>
                 <p className="text-stone-700">Quantity: {item.quantity}</p>
                 <p className="text-stone-700">Price: ${item.price.toFixed(2)}</p>
               </div>
               <button
-                onClick={() => removeItem(item.product_id, item.price * item.quantity)}
+                onClick={() => removeItem(item.productId, item.price * item.quantity)}
                 disabled={removeLoading}
                 className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
               >

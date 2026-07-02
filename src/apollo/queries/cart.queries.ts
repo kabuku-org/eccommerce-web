@@ -19,8 +19,8 @@ export const GET_MY_CART = gql`
 `
 
 export const ADD_TO_CART = gql`
-mutation AddToCart($productId: String!) {
-  addToCart(productId: $productId) {
+mutation AddItemToCart($productId: String!) {
+  addItemToCart(productId: $productId) {
     id 
     userId
     items {
@@ -69,7 +69,7 @@ mutation ClearCart {
 //resonse types for the queries and mutations
 
 export type CartItemData = {
-    product_id: string;
+    productId: string;
     quantity: number;
     price: number;
     name: string;
@@ -77,7 +77,7 @@ export type CartItemData = {
 
 export type CartData = {
   id: string;
-  user_id: string;
+  userId: string;
   items: CartItemData[];
   total: number;
 }
@@ -86,8 +86,8 @@ export type GetMyCartResponse = {
   myCart: CartData
 }
 
-export type AddToCartResponse = {
-  addToCart: CartData
+export type AddItemToCartResponse = {
+  addItemToCart: CartData
 }
 
 export type RemoveFromCartResponse = {

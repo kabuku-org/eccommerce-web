@@ -1,6 +1,6 @@
 import {useQuery , useMutation} from "@apollo/client/react";
 import {GET_MY_CART , ADD_TO_CART , REMOVE_FROM_CART , CLEAR_CART} from "../apollo/queries/cart.queries"
-import type { GetMyCartResponse , AddToCartResponse , RemoveFromCartResponse ,ClearCartResponse } from "../apollo/queries/cart.queries";
+import type { GetMyCartResponse , AddItemToCartResponse , RemoveFromCartResponse ,ClearCartResponse } from "../apollo/queries/cart.queries";
 export const useCart = () => {
 
     const {data , loading , error , refetch} = useQuery<GetMyCartResponse>(GET_MY_CART , {
@@ -8,7 +8,7 @@ export const useCart = () => {
     })//meaning do not use cache and always fetch from server
 
 
-    const [addItemMUtation , {loading: addLoading , error: addError}] = useMutation<AddToCartResponse>(ADD_TO_CART , {
+    const [addItemMMutation , {loading: addLoading , error: addError}] = useMutation<AddItemToCartResponse>(ADD_TO_CART , {
         refetchQueries: [{query: GET_MY_CART}]
     })
 
@@ -25,12 +25,12 @@ export const useCart = () => {
     //they wrap the muatioj finvtuion with the correct parameters and return the result
     async function addItem(productId: string) {
         try {
-            const result = await addItemMUtation({
+            const result = await addItemMMutation({
                 variables: {
                     productId
                 }
             })
-            return result.data?.addToCart
+            return result.data?.addItemToCart
         } catch (error) {
             console.error("Error adding item to cart:", error);
             throw error;
