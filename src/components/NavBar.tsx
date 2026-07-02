@@ -8,7 +8,7 @@ export function NavBar() {
 
   function handleLogout() {
     logout();
-    navigate("/login");
+    navigate("/");
   }
 
   return (
@@ -27,16 +27,6 @@ export function NavBar() {
         <Link to="/cart" className="hover:text-stone-300 transition-colors">
           Cart
         </Link>
-
-        {/* Only admin see dashboard link */}
-        {user?.role === 'ADMIN' ? (
-          <Link
-            to="/dashboard"
-            className="hover:text-stone-300 transition-colors"
-          >
-            Dashboard
-          </Link>
-        ) : null}
 
         {/* User info + logout */}
         {user ? (

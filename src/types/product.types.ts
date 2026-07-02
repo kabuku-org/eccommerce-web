@@ -13,7 +13,7 @@ export type CreateProductInput = {
     description: string
     price: number
     stock: number
-    imageUrl: string
+    imageUrl?: string
 }
 
 export type UpdateProductInput = {

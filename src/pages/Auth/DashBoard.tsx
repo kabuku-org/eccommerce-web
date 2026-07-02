@@ -212,6 +212,17 @@ export function Dashboard() {
               />
             </div>
 
+            {/* <div> */}
+                {/* <label className='block text-sm text-stone-600  mb-1'> Image url</label>
+                <input
+                name='imageurl '
+                required
+                value={form.imageUrl}
+                onChange={handleFormChange}
+                className='w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400'
+                /> */}
+            {/* </div> */}
+
             <div className="col-span-2 flex gap-3">
               <button
                 type="submit"
@@ -274,6 +285,7 @@ export function Dashboard() {
                     KES {product.price.toLocaleString()} · {product.stock} in
                     stock
                   </p>
+                  
                 </div>
 
                 <div className="flex gap-2">
