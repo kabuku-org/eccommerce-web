@@ -13,3 +13,9 @@ export type order = {
     createdAt: string
     updatedAt: string
 }
+
+export type OrderItemInput = {
+  productId: string     
+  quantity: number
+  price: number
+}
