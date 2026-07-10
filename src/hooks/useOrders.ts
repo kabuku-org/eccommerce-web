@@ -6,11 +6,11 @@ import type {OrderItemInput} from "../types/order.types"
 
 export const useOrders = () => {
 
-    const {data , loading , error , refetch} = useQuery<GetMyOrdersResponse>(GET_MY_ORDERS , {
+    const {data , loading ,success, error , refetch} = useQuery<GetMyOrdersResponse>(GET_MY_ORDERS , {
         fetchPolicy: "network-only"
     })//meaning do not use cache and always fetch from server
 
-    const [createOrderMutation , {loading: createLoading , error: createError}] = useMutation<CreateOrderResponse>(CREATE_ORDER , {
+    const [createOrderMutation , {loading: createLoading , error: createError }] = useMutation<CreateOrderResponse>(CREATE_ORDER , {
         refetchQueries: [{query: GET_MY_ORDERS}]
     })
 
@@ -66,6 +66,11 @@ export const useOrders = () => {
         orders: data?.myOrders ?? [],
         loading,
         error,
+        createError,
+        cancelError,
+        
+
+        checkoutError,
         refetch,
         createOrder,
         cancelOrder,

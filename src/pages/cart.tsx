@@ -1,12 +1,36 @@
 import { NavBar } from '../components/NavBar'
 import { useCart } from '../hooks/useCart'
 import {useNavigate} from 'react-router-dom'
+import { useOrders } from '../hooks/useOrders'
 
 
 export function Cart() {
   const { cart, itemCount  ,loading , error , addItem, removeItem, clearCart , addLoading, removeLoading, clearLoading, addError, removeError, clearError } = useCart()
   const navigate = useNavigate()
+  const { createOrder, createError, checkoutOrder } = useOrders()
+async function handlePlaceOrder() {
+    try {
+      if (!cart || itemCount === 0) {
+        console.error('Cart is empty. Cannot place order.')
+        return
+      }
 
+      const orderItems = cart.items.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price
+      }))
+
+      const totalAmount = cart.total
+
+      await createOrder(orderItems, totalAmount)
+
+      // Optionally, you can clear the cart after placing the order
+      await clearCart()
+    } catch (error) {
+      console.error('Error placing order:', error)
+    }
+  }
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-50">
@@ -95,23 +119,40 @@ if (!cart || itemCount === 0) {
           </button>
         </div>
           {/* Footer: total + checkout */}
-        <div className="bg-white border border-stone-200 rounded-lg p-6">
+       {/* Footer: total + order button */}
+        <div className="bg-white border border-stone-200 rounded-lg p-6 mt-6">
           <div className="flex items-center justify-between mb-6">
-            <span className="text-lg font-semibold text-stone-900">
-              Total
-            </span>
+            <span className="text-lg font-semibold text-stone-900">Total</span>
             <span className="text-2xl font-bold text-stone-900">
               KES {cart.total.toLocaleString()}
             </span>
           </div>
 
-          <button
-            onClick={() => alert('Checkout coming soon!')}
-            className="w-full bg-stone-900 text-white py-3 rounded-md text-sm font-medium hover:bg-stone-800 transition-colors"
-          >
-            Proceed to Checkout
-          </button>
+          {createError && (
+            <p className="text-red-600 text-sm mb-4">{createError.message}</p>
+          )}
+
+          {!createError ? (
+            <div className="text-center">
+              <p className="text-green-600 font-medium mb-3">✅ Order placed!</p>
+              <button
+                onClick={() => navigate('/orders')}
+                className="w-full bg-stone-900 text-white py-3 rounded-md text-sm font-medium hover:bg-stone-800 transition-colors"
+              >
+                View my orders
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handlePlaceOrder}
+              disabled={orderLoading}
+              className="w-full bg-stone-900 text-white py-3 rounded-md text-sm font-medium hover:bg-stone-800 disabled:opacity-50 transition-colors"
+            >
+              {orderLoading ? 'Placing order...' : 'Place Order'}
+            </button>
+          )}
         </div>
+        
       </main>
     </div>
   )
