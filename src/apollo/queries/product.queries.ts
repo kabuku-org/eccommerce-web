@@ -10,7 +10,10 @@ export const GET_PRODUCTS = gql`
       price
       stock
       imageUrl
-      
+      discountPrice
+      discountTag
+      isDiscounted
+      createdAt
     }
   }
 `
@@ -24,7 +27,10 @@ export const GET_PRODUCT = gql`
       price
       stock
       imageUrl
-      
+      discountPrice
+      discountTag
+      isDiscounted
+      createdAt
     }
   }
 `
@@ -38,6 +44,9 @@ export const CREATE_PRODUCT = gql`
       price
       stock
       imageUrl
+      discountPrice
+      discountTag
+      isDiscounted
       createdAt
     }
   }
@@ -52,6 +61,9 @@ export const UPDATE_PRODUCT = gql`
       price
       stock
       imageUrl
+      discountPrice
+      discountTag
+      isDiscounted
       createdAt
     }
   }

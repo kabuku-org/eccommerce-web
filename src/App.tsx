@@ -4,7 +4,9 @@ import { Signup } from './pages/Auth/Signup'
 import ProtectedRoutes from './pages/Auth/ProtectedRoutes'
 import { HomeUser } from './pages/Home'
 import { Cart } from './pages/cart'
-
+import { Order } from './pages/order'
+import { ReviewsOrderPage } from './pages/ReviewsOrderPage'
+import { CustomersPage } from './pages/CustomersPage'
 
 
 export function App() {
@@ -19,6 +21,9 @@ export function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/home" element={<HomeUser />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Order />} />
+          <Route path="/admin/reviews" element={<ReviewsOrderPage />} />
+          <Route path="/admin/customers" element={<CustomersPage />} />
           {/* Dashboard features are now embedded in /home based on user role */}
           {/* Add more protected routes as needed */}
         </Route>
@@ -26,4 +31,3 @@ export function App() {
     </BrowserRouter>
   )
 }
-

@@ -2,6 +2,7 @@ export type orderItem = {
   productId: string
   quantity: number
   price: number
+  name: string
 }
 
 export type order = {
@@ -9,13 +10,7 @@ export type order = {
   userId: string
   cart: orderItem[]
   totalAmount: number
-    status: 'pending' | 'completed' | 'cancelled'
-    createdAt: string
-    updatedAt: string
-}
-
-export type OrderItemInput = {
-  productId: string     
-  quantity: number
-  price: number
+  status: 'pending' | 'completed' | 'cancelled'
+  createdAt: string
+  updatedAt: string
 }

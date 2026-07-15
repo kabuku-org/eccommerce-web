@@ -2,11 +2,11 @@ import {useQuery , useMutation} from "@apollo/client/react";
 
 import {CREATE_ORDER , GET_MY_ORDERS , CANCEL_ORDER , CHECKOUT_ORDER} from "../apollo/queries/order.queries"
 import type {CreateOrderResponse , GetMyOrdersResponse , CancelOrderResponse , CheckoutOrderResponse} from "../apollo/queries/order.queries"
-import type {OrderItemInput} from "../types/order.types"
+
 
 export const useOrders = () => {
 
-    const {data , loading ,success, error , refetch} = useQuery<GetMyOrdersResponse>(GET_MY_ORDERS , {
+    const {data , loading , error , refetch} = useQuery<GetMyOrdersResponse>(GET_MY_ORDERS , {
         fetchPolicy: "network-only"
     })//meaning do not use cache and always fetch from server
 
@@ -25,14 +25,9 @@ export const useOrders = () => {
     //action functions
     //these are what the components will call to perform the actions
     //they wrap the muatioj finvtuion with the correct parameters and return the result
-    async function createOrder(cart: OrderItemInput[] , totalAmount: number) {
+    async function createOrder() {
         try {
-            const result = await createOrderMutation({
-                variables: {
-                    cart,
-                    totalAmount
-                }
-            })
+            const result = await createOrderMutation()
             return result.data?.createOrder
         } catch (error) {
             console.error("Error creating order:", error);
@@ -40,7 +35,7 @@ export const useOrders = () => {
         }
     }
 
-    async function cancelOrder(orderId: string) {
+async function cancelOrder(orderId: string) {
         try {
             const result = await cancelOrderMutation({  
                 variables: {
@@ -68,7 +63,6 @@ export const useOrders = () => {
         error,
         createError,
         cancelError,
-        
 
         checkoutError,
         refetch,
@@ -80,12 +74,12 @@ export const useOrders = () => {
         checkoutLoading
     }
 }   
+
 //admin hook -all orders
 export function useAllOrders() {
     const {data , loading , error , refetch} = useQuery<GetMyOrdersResponse>(GET_MY_ORDERS , {
         fetchPolicy: "network-only"
     })//meaning do not use cache and always fetch from server
-
 
 
     return {

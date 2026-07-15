@@ -9,7 +9,6 @@ type FormState = {
   price: string
   stock: string
   imageUrl: string
-  createdAt?: string
 }
 
 const emptyForm: FormState = {
@@ -212,16 +211,18 @@ export function Dashboard() {
               />
             </div>
 
-            {/* <div> */}
-                {/* <label className='block text-sm text-stone-600  mb-1'> Image url</label>
-                <input
-                name='imageurl '
-                required
+            <div className="col-span-2 sm:col-span-1">
+              <label className="block text-sm text-stone-600 mb-1">
+                Image URL
+              </label>
+              <input
+                name="imageUrl"
                 value={form.imageUrl}
                 onChange={handleFormChange}
-                className='w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400'
-                /> */}
-            {/* </div> */}
+                placeholder="https://example.com/image.jpg"
+                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
 
             <div className="col-span-2 flex gap-3">
               <button
@@ -285,7 +286,6 @@ export function Dashboard() {
                     KES {product.price.toLocaleString()} · {product.stock} in
                     stock
                   </p>
-                  
                 </div>
 
                 <div className="flex gap-2">

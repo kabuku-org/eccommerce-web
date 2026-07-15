@@ -1,19 +1,18 @@
-import {gql} from '@apollo/client';
-import type {CartItem} from '../../types/cart.types'
+import {gql} from '@apollo/client'
+
 
 export const GET_MY_CART = gql`
   query GetMyCart {
     myCart {
-    
-        id
-        userId
-        items {
+      id
+      userId
+      items {
         productId
         quantity
-        price 
+        price
         name
-        }
-        total
+      }
+      total
     }
   }
 `
@@ -21,7 +20,7 @@ export const GET_MY_CART = gql`
 export const ADD_TO_CART = gql`
 mutation AddItemToCart($productId: String!) {
   addItemToCart(productId: $productId) {
-    id 
+    id
     userId
     items {
       productId
@@ -96,4 +95,4 @@ export type RemoveFromCartResponse = {
 
 export type ClearCartResponse = {
   clearCart: CartData
-}   
+}
