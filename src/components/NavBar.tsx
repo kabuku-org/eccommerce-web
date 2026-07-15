@@ -5,6 +5,7 @@ export function NavBar() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const isAdmin = user?.role === 'ADMIN'
 
   function handleLogout() {
     logout();
@@ -27,6 +28,22 @@ export function NavBar() {
         <Link to="/cart" className="hover:text-stone-300 transition-colors">
           Cart
         </Link>
+
+        <Link to="/orders" className="hover:text-stone-300 transition-colors">
+          My Orders
+        </Link>
+
+        {/* Admin links */}
+        {isAdmin && (
+          <>
+            <Link to="/admin/customers" className="hover:text-stone-300 transition-colors">
+              Customers
+            </Link>
+            <Link to="/admin/reviews" className="hover:text-stone-300 transition-colors">
+              Reviews
+            </Link>
+          </>
+        )}
 
         {/* User info + logout */}
         {user ? (

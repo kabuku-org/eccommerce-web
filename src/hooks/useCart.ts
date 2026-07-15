@@ -23,7 +23,7 @@ export const useCart = () => {
     //action function
     //these are what the components will call to perform the actions
     //they wrap the muatioj finvtuion with the correct parameters and return the result
-    async function addItem(productId: string) {
+async function addItem(productId: string) {
         try {
             const result = await addItemMMutation({
                 variables: {
@@ -37,7 +37,7 @@ export const useCart = () => {
         }
     }
 
-    async function removeItem(productId: string , total: number) {
+    async function removeItem(productId: string, total: number) {
         try {
             const result = await removeItemMutation({
                 variables: {

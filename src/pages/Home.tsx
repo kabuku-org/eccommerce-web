@@ -13,6 +13,9 @@ type FormState = {
   price: string
   stock: string
   imageUrl: string
+  discountPrice: string
+  discountTag: string
+  isDiscounted: boolean
 }
 
 const emptyForm: FormState = {
@@ -21,6 +24,9 @@ const emptyForm: FormState = {
   price: '',
   stock: '',
   imageUrl: '',
+  discountPrice: '',
+  discountTag: '',
+  isDiscounted: false,
 }
 
 export function HomeUser() {
@@ -104,6 +110,9 @@ export function HomeUser() {
       price: product.price.toString(),
       stock: product.stock.toString(),
       imageUrl: product.imageUrl,
+      discountPrice: product.discountPrice?.toString() ?? '',
+      discountTag: product.discountTag ?? '',
+      isDiscounted: product.isDiscounted ?? false,
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -118,6 +127,9 @@ export function HomeUser() {
         price: parseFloat(form.price),
         stock: parseInt(form.stock),
         imageUrl: form.imageUrl || 'https://via.placeholder.com/150',
+        discountPrice: form.discountPrice ? parseFloat(form.discountPrice) : undefined,
+        discountTag: form.discountTag || undefined,
+        isDiscounted: form.discountPrice ? true : false,
       })
       setEditing(null)
       setForm(emptyForm)
@@ -270,6 +282,48 @@ export function HomeUser() {
                 value={form.stock}
                 onChange={handleFormChange}
                 required
+                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+
+            <div className="col-span-2 sm:col-span-1">
+              <label className="block text-sm text-stone-600 mb-1">
+                Image URL
+              </label>
+              <input
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={handleFormChange}
+                placeholder="https://example.com/image.jpg"
+                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+
+            <div className="col-span-2 sm:col-span-1">
+              <label className="block text-sm text-stone-600 mb-1">
+                Discount Price (KES)
+              </label>
+              <input
+                name="discountPrice"
+                type="number"
+                min="0"
+                step="0.01"
+                value={form.discountPrice}
+                onChange={handleFormChange}
+                placeholder="Only for updating products"
+                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-sm text-stone-600 mb-1">
+                Discount Tag
+              </label>
+              <input
+                name="discountTag"
+                value={form.discountTag}
+                onChange={handleFormChange}
+                placeholder="e.g., Holiday Special, Black Friday (optional)"
                 className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>

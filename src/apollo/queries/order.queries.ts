@@ -1,14 +1,15 @@
 import {gql} from '@apollo/client'
 
 export const CREATE_ORDER = gql`
-mutation CreateOrder($cart: [OrderItemInput!]!, $totalAmount: Float!) {
-  createOrder(cart: $cart, totalAmount: $totalAmount) {
+mutation CreateOrder {
+  createOrder {
     id
     userId
     cart {
       productId
       quantity
       price
+      name
     }
     totalAmount
     status
@@ -27,6 +28,7 @@ query GetMyOrders {
       productId
       quantity
       price
+      name
     }
     totalAmount
     status
@@ -45,6 +47,7 @@ mutation CancelOrder($orderId: String!) {
       productId
       quantity
       price
+      name
     }
     totalAmount
     status
@@ -63,6 +66,7 @@ mutation CheckoutOrder($orderId: String!) {
       productId
       quantity
       price
+      name
     }
     totalAmount
     status
@@ -81,6 +85,7 @@ query GetAllOrders {
       productId
       quantity
       price
+      name
     }
     totalAmount
     status
@@ -99,6 +104,7 @@ query GetCancelledOrders {
       productId
       quantity
       price
+      name
     }
     totalAmount
     status
@@ -110,9 +116,10 @@ query GetCancelledOrders {
 
 //response types for the above queries and mutations
 export type OrderItemInput = {
-  productId: string     
+  productId: string
   quantity: number
   price: number
+  name: string
 }
 
 export type CreateOrderResponse = {

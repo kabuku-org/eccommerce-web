@@ -5,32 +5,25 @@ import { useOrders } from '../hooks/useOrders'
 
 
 export function Cart() {
-  const { cart, itemCount  ,loading , error , addItem, removeItem, clearCart , addLoading, removeLoading, clearLoading, addError, removeError, clearError } = useCart()
+  const { cart, itemCount  ,loading , error , removeItem, clearCart , removeLoading, clearLoading } = useCart()
   const navigate = useNavigate()
-  const { createOrder, createError, checkoutOrder } = useOrders()
-async function handlePlaceOrder() {
+  const { createOrder, createError, createLoading} = useOrders()
+  
+  async function handlePlaceOrder() {
     try {
       if (!cart || itemCount === 0) {
         console.error('Cart is empty. Cannot place order.')
         return
       }
 
-      const orderItems = cart.items.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.price
-      }))
+      // Backend create_order takes no arguments - it reads from user's cart automatically
+      await createOrder()
 
-      const totalAmount = cart.total
-
-      await createOrder(orderItems, totalAmount)
-
-      // Optionally, you can clear the cart after placing the order
-      await clearCart()
     } catch (error) {
       console.error('Error placing order:', error)
     }
   }
+  
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-50">
@@ -96,7 +89,7 @@ if (!cart || itemCount === 0) {
               <div>
                 <h2 className="text-lg font-semibold text-stone-900">{item.name}</h2>
                 <p className="text-stone-700">Quantity: {item.quantity}</p>
-                <p className="text-stone-700">Price: ${item.price.toFixed(2)}</p>
+                <p className="text-stone-700">Price: KES {item.price.toFixed(2)}</p>
               </div>
               <button
                 onClick={() => removeItem(item.productId, item.price * item.quantity)}
@@ -109,7 +102,7 @@ if (!cart || itemCount === 0) {
           ))}
         </ul>
         <div className="mt-6 flex justify-between items-center">
-          <p className="text-lg font-semibold text-stone-900">Total: ${cart.total.toFixed(2)}</p>
+          <p className="text-lg font-semibold text-stone-900">Total: KES {cart.total.toFixed(2)}</p>
           <button
             onClick={clearCart}
             disabled={clearLoading}
@@ -132,7 +125,7 @@ if (!cart || itemCount === 0) {
             <p className="text-red-600 text-sm mb-4">{createError.message}</p>
           )}
 
-          {!createError ? (
+          {createLoading ? (
             <div className="text-center">
               <p className="text-green-600 font-medium mb-3">✅ Order placed!</p>
               <button
@@ -145,10 +138,10 @@ if (!cart || itemCount === 0) {
           ) : (
             <button
               onClick={handlePlaceOrder}
-              disabled={orderLoading}
+              disabled={createLoading}
               className="w-full bg-stone-900 text-white py-3 rounded-md text-sm font-medium hover:bg-stone-800 disabled:opacity-50 transition-colors"
             >
-              {orderLoading ? 'Placing order...' : 'Place Order'}
+              {createLoading ? 'Placing order...' : 'Place Order'}
             </button>
           )}
         </div>
