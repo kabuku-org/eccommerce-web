@@ -16,6 +16,7 @@ export const LOGIN = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       token
+      
     
       user{
         id
@@ -46,6 +47,7 @@ export type RegisterResponse = {
 export type LoginResponse = {
   login: {
     token: string
+    accessToken: string
     user: User
   }
 }

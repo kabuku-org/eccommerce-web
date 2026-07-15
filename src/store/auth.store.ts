@@ -6,6 +6,7 @@ type AuthStore = {
   token: string | null
   setAuth: (user: User, token: string) => void
   logout: () => void
+  setAccessToken: (accessToken: string) => void
 }
 
 // helper — safely parse user from localStorage
@@ -33,5 +34,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     set({ user: null, token: null })
+  },
+  
+   setAccessToken: (accessToken: string) => {
+  localStorage.setItem("token", accessToken)
+  set({ token: accessToken })
   },
 }))
