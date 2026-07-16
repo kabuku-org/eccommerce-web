@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { NavBar } from '../components/NavBar'
 import { ProductCard } from '../components/ProductsCard'
 import { useProducts } from '../hooks/useProducts'
 import type { Product } from '../types/product.types'
@@ -493,8 +492,7 @@ export function HomeUser() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <NavBar />
+    <div className="min-h-screen">
       {isAdmin ? <AdminDashboard /> : <CustomerView />}
     </div>
   )

@@ -1,4 +1,3 @@
-import { NavBar } from "../components/NavBar";
 import { useOrders } from "../hooks/useOrders";
 import type { order } from "../types/order.types";
 
@@ -15,11 +14,10 @@ function getOrderStatus(order: order): string {
 
 export function Order() {
   const {  loading, error , orders , cancelOrder , cancelLoading} = useOrders();
-
+ const { checkoutLoading , checkoutError , checkoutOrder}= useOrders()
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-50">
-        <NavBar />
+      <div className="min-h-screen">
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
           <div className="text-5xl mb-4">📦</div>
           <h1 className="text-xl font-semibold text-stone-900 mb-2">
@@ -32,8 +30,7 @@ export function Order() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-stone-50">
-        <NavBar />
+      <div className="min-h-screen">
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
           <div className="text-5xl mb-4">📦</div>
           <h1 className="text-xl font-semibold text-stone-900 mb-2">
@@ -45,8 +42,7 @@ export function Order() {
   }
 
     return (
-    <div className="min-h-screen bg-stone-50">
-      <NavBar />
+    <div className="min-h-screen">
       <main className="max-w-3xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-semibold text-stone-900 mb-8">My Orders</h1>
 
@@ -115,6 +111,16 @@ export function Order() {
                       className="text-red-500 hover:text-red-700 text-xs disabled:opacity-50 transition-colors"
                     >
                       {cancelLoading ? 'Cancelling...' : 'Cancel order'}
+                    </button>
+                  )}
+
+                  {statusUpper === 'PENDING' && (
+                    <button
+                      onClick={() => checkoutOrder(order.id)}
+                      disabled={checkoutLoading}
+                      className="text-green-500 hover:text-green-700 text-xs disabled:opacity-50 transition-colors"
+                    >
+                      {checkoutLoading ? 'Checking out...' : 'Checkout order'}
                     </button>
                   )}
                 </div>

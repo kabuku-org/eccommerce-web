@@ -1,4 +1,3 @@
-import { NavBar } from "../components/NavBar";
 import { useCustomers } from "../hooks/useCustomers";
 import { useAuthStore } from "../store/auth.store";
 
@@ -17,8 +16,7 @@ export function CustomersPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-stone-50">
-        <NavBar />
+      <div className="min-h-screen">
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
           <h1 className="text-2xl font-semibold text-stone-900 mb-4">
             Access Denied
@@ -32,8 +30,7 @@ export function CustomersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <NavBar />
+    <div className="min-h-screen">
       <main className="max-w-4xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-semibold text-stone-900 mb-8">Customers</h1>
 
@@ -57,7 +54,7 @@ export function CustomersPage() {
         )}
 
         {!loading && !error && customers.length > 0 && (
-          <div className="bg-white border border-stone-200 rounded-lg overflow-hidden">
+          <div className="bg-white border border-stone-200 rounded-lg overflow-hidden shadow-sm">
             <table className="w-full">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
@@ -68,7 +65,7 @@ export function CustomersPage() {
               </thead>
               <tbody>
                 {customers.map((customer: Customer) => (
-                  <tr key={customer.id} className="border-b border-stone-100 last:border-0">
+                  <tr key={customer.id} className="border-b border-stone-100 last:border-0 hover:bg-stone-50/50 transition-colors">
                     <td className="px-5 py-4 text-sm font-medium text-stone-900">
                       {customer.name}
                     </td>

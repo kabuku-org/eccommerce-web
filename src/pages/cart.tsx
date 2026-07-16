@@ -1,4 +1,3 @@
-import { NavBar } from '../components/NavBar'
 import { useCart } from '../hooks/useCart'
 import {useNavigate} from 'react-router-dom'
 import { useOrders } from '../hooks/useOrders'
@@ -16,9 +15,7 @@ export function Cart() {
         return
       }
 
-      // Backend create_order takes no arguments - it reads from user's cart automatically
       await createOrder()
-
     } catch (error) {
       console.error('Error placing order:', error)
     }
@@ -26,8 +23,7 @@ export function Cart() {
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-50">
-        <NavBar />
+      <div className="max-h-screen">
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
           <div className="text-5xl mb-4">🛒</div>
           <h1 className="text-xl font-semibold text-stone-900 mb-2">
@@ -40,8 +36,7 @@ export function Cart() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-stone-50">
-        <NavBar />
+      <div className="min-h-screen">
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
           <div className="text-5xl mb-4">🛒</div>
           <h1 className="text-xl font-semibold text-stone-900 mb-2">
@@ -51,13 +46,10 @@ export function Cart() {
       </div>
     )
   }
-//empty state instance showing no item in cart
 
 if (!cart || itemCount === 0) { 
-
   return (
-    <div className="min-h-screen bg-stone-50">
-      <NavBar />
+    <div className="min-h-screen">
       <main className="max-w-3xl mx-auto px-6 py-20 text-center">
         <div className="text-5xl mb-4">🛒</div>
         <h1 className="text-xl font-semibold text-stone-900 mb-2">
@@ -77,10 +69,8 @@ if (!cart || itemCount === 0) {
   )
 }
 
-//cart with items instance showing the items in the cart and the total price
   return (
-    <div className="min-h-screen bg-stone-50">
-      <NavBar />
+    <div className="min-h-screen">
       <main className="max-w-3xl mx-auto px-6 py-20">
         <h1 className="text-2xl font-semibold text-stone-900 mb-6">Your Cart</h1>
         <ul className="space-y-4">
@@ -111,8 +101,6 @@ if (!cart || itemCount === 0) {
             {clearLoading ? 'Clearing...' : 'Clear Cart'}
           </button>
         </div>
-          {/* Footer: total + checkout */}
-       {/* Footer: total + order button */}
         <div className="bg-white border border-stone-200 rounded-lg p-6 mt-6">
           <div className="flex items-center justify-between mb-6">
             <span className="text-lg font-semibold text-stone-900">Total</span>
