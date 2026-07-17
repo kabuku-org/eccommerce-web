@@ -228,6 +228,7 @@ const Sidebar = React.forwardRef<
         ref={ref}
         data-slot="sidebar-container"
         data-side={side}
+        data-collapsible={state === "collapsed" ? collapsible : ""}
         className="group peer hidden md:block"
         {...props}
       >
@@ -235,7 +236,6 @@ const Sidebar = React.forwardRef<
           data-slot="sidebar"
           data-variant={variant}
           data-state={state}
-          data-collapsible={state === "collapsed" ? collapsible : ""}
           className={cn(
             "bg-sidebar text-sidebar-foreground fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex data-[side=left]:left-0 data-[side=right]:right-0 data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
             variant === "floating" || variant === "inset"
