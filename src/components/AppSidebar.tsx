@@ -56,11 +56,20 @@ const adminNavItems = [
     icon: LayoutDashboard,
   },
   {
+    title: "Products",
+    url: "/admin/products",
+    icon: Package,
+  },
+  {
+    title: "All Orders",
+    url: "/admin/orders",
+    icon: ShoppingCart,
+  },
+  {
     title: "Reviewed Orders",
     url: "/admin/reviews",
     icon: Star,
   },
-  // TODO: Create route & page for cancelled orders (backend hook needed)
   {
     title: "Cancelled Orders",
     url: "/admin/cancelled-orders",

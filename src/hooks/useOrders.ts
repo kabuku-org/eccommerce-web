@@ -49,10 +49,12 @@ async function cancelOrder(orderId: string) {
         }
     }
 
-    async function checkoutOrder(orderId: string) {
+    async function checkoutOrder(orderId: string, deliveryAddress?: string, pickupLocation?: string) {
         await checkoutOrderMutation({
             variables: {
-                orderId
+                orderId,
+                deliveryAddress: deliveryAddress ?? null,
+                pickupLocation: pickupLocation ?? null
             }
         })
     }
