@@ -1,9 +1,12 @@
 import { useState } from "react"
 import { useProducts } from "../../hooks/useProducts"
 import type { Product } from "../../types/product.types"
+import {useAllOrders} from "../../hooks/useOrders"
+import type { order} from "../../types/order.types"
+import { useCustomers } from "../../hooks/useCustomers"
 import {
   Package,
-  ShoppingCart,
+  Apple,
   DollarSign,
   TrendingUp,
   Plus,
@@ -18,7 +21,11 @@ type FormState = {
   description: string
   price: string
   stock: string
-  imageUrl: string
+  imageUrl: string 
+  discountPrice: string
+  discountTag: string
+  isDiscounted: boolean
+  
 }
 
 const emptyForm: FormState = {
@@ -27,6 +34,9 @@ const emptyForm: FormState = {
   price: "",
   stock: "",
   imageUrl: "",
+  discountPrice: "",
+  discountTag: "",
+  isDiscounted: false,
 }
 
 function StatCard({
@@ -72,7 +82,7 @@ export function Dashboard() {
     updateLoading,
     deleteLoading,
   } = useProducts()
-
+const { orders } = useAllOrders()
   const [form, setForm] = useState<FormState>(emptyForm)
   const [search, setSearch] = useState("")
   const [editing, setEditing] = useState<Product | null>(null)
@@ -115,6 +125,9 @@ export function Dashboard() {
       price: product.price.toString(),
       stock: product.stock.toString(),
       imageUrl: product.imageUrl,
+      discountPrice: product.discountPrice?.toString() ?? '',
+      discountTag: product.discountTag ?? '',
+      isDiscounted: product.isDiscounted ?? false,
     })
     setShowForm(true)
     window.scrollTo({ top: 0, behavior: "smooth" })
@@ -130,6 +143,9 @@ export function Dashboard() {
         price: parseFloat(form.price),
         stock: parseInt(form.stock),
         imageUrl: form.imageUrl || "https://via.placeholder.com/150",
+        discountPrice: form.discountPrice ? parseFloat(form.discountPrice) : undefined,
+        discountTag: form.discountTag || undefined,
+        isDiscounted: form.isDiscounted ? true : false,
       })
       setEditing(null)
       setForm(emptyForm)
@@ -155,6 +171,10 @@ export function Dashboard() {
     0
   )
   const totalStock = products.reduce((sum, p) => sum + p.stock, 0)
+
+  const { customers } = useCustomers()
+
+  
 
   return (
     <div className="space-y-6">
@@ -188,11 +208,27 @@ export function Dashboard() {
           trend="Active inventory"
         />
         <StatCard
-          icon={ShoppingCart}
-          label="Total Orders"
-          value="—"
+          icon={Apple}
+          label="Completed Orders"
+          value={orders.filter((o: order) => o.status === "completed").length}
           trend="Last 30 days"
         />
+        <StatCard 
+        icon={Apple}
+        label="Pending Orders" 
+        value={orders.filter((o: order) => o.status === "pending").length} 
+        trend="Last 30 days"
+        
+        />
+
+        <StatCard 
+        icon={Apple}
+        label="Cancelled Orders" 
+        value={orders.filter((o: order) => o.status === "cancelled").length} 
+        trend="Last 30 days"
+        
+        />
+
         <StatCard
           icon={DollarSign}
           label="Inventory Value"

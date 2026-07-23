@@ -70,6 +70,8 @@ mutation CheckoutOrder($orderId: String!) {
     }
     totalAmount
     status
+    deliveryAddress
+    pickupLocation
     createdAt
     updatedAt
   }
@@ -144,4 +146,8 @@ export type CancelOrderResponse = {
 
 export type CheckoutOrderResponse = {
   checkoutOrder: CreateOrderResponse['createOrder']
+}
+
+export type GetAllOrdersResponse = {
+  allOrders: CreateOrderResponse['createOrder'][]
 }
