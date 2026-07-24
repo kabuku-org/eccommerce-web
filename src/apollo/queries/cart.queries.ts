@@ -34,8 +34,8 @@ mutation AddItemToCart($productId: String!) {
 `
 
 export const REMOVE_FROM_CART = gql`
-mutation RemoveFromCart($productId: String! , $total: Float!) {
-  removeFromCart(productId: $productId, total: $total ) {
+mutation RemoveFromCart($productId: String! , $quantity: Int! = 1) {
+  removeFromCart(productId: $productId, quantity: $quantity) {
     id
     userId
     items {

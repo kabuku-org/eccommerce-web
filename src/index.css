@@ -70,11 +70,6 @@
 #root {
   width: 100%;
   min-height: 100vh;
-  margin: 0 auto;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
 }
 
 body {

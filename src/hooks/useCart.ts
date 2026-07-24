@@ -37,12 +37,12 @@ async function addItem(productId: string) {
         }
     }
 
-    async function removeItem(productId: string, total: number) {
+    async function removeItem(productId: string, quantity: number = 1) {
         try {
             const result = await removeItemMutation({
                 variables: {
                     productId,
-                    total
+                    quantity
                 }
             })
             return result.data?.removeFromCart

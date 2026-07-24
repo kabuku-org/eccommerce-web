@@ -4,7 +4,7 @@ import { useOrders } from '../hooks/useOrders'
 
 
 export function Cart() {
-  const { cart, itemCount  ,loading , error , removeItem, clearCart , removeLoading, clearLoading } = useCart()
+  const { cart, itemCount  ,loading , error , removeItem, addItem, clearCart , removeLoading, clearLoading, addLoading } = useCart()
   const navigate = useNavigate()
   const { createOrder, createError, createLoading} = useOrders()
   
@@ -78,16 +78,42 @@ if (!cart || itemCount === 0) {
             <li key={item.productId} className="flex justify-between items-center bg-white p-4 rounded shadow">
               <div>
                 <h2 className="text-lg font-semibold text-stone-900">{item.name}</h2>
-                <p className="text-stone-700">Quantity: {item.quantity}</p>
                 <p className="text-stone-700">Price: KES {item.price.toFixed(2)}</p>
+                <p className="text-stone-500 text-sm">Subtotal: KES {(item.price * item.quantity).toFixed(2)}</p>
               </div>
-              <button
-                onClick={() => removeItem(item.productId, item.price * item.quantity)}
-                disabled={removeLoading}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-              >
-                {removeLoading ? 'Removing...' : 'Remove'}
-              </button>
+
+              <div className="flex items-center gap-3">
+                {/* Quantity controls */}
+                <div className="flex items-center border border-stone-300 rounded-md overflow-hidden">
+                  <button
+                    onClick={() => removeItem(item.productId, 1)}
+                    disabled={removeLoading}
+                    className="px-3 py-1.5 text-sm bg-stone-100 hover:bg-stone-200 disabled:opacity-40 transition-colors border-r border-stone-300"
+                    title="Decrease quantity"
+                  >
+                    −
+                  </button>
+                  <span className="px-4 py-1.5 text-sm font-medium text-stone-900 min-w-[3rem] text-center">
+                    {item.quantity}
+                  </span>
+                  <button
+                    onClick={() => addItem(item.productId)}
+                    disabled={addLoading}
+                    className="px-3 py-1.5 text-sm bg-stone-100 hover:bg-stone-200 disabled:opacity-40 transition-colors border-l border-stone-300"
+                    title="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => removeItem(item.productId, item.quantity)}
+                  disabled={removeLoading}
+                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm disabled:opacity-50"
+                >
+                  {removeLoading ? '...' : 'Remove'}
+                </button>
+              </div>
             </li>
           ))}
         </ul>

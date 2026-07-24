@@ -28,7 +28,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar"
-
+//cart number count
+import { useCart } from "../hooks/useCart"
 // Items visible to both CUSTOMER and ADMIN
 const commonNavItems = [
   {
@@ -100,7 +101,7 @@ export function AppSidebar() {
   }
 
   const isActive = (url: string) => location.pathname === url
-
+  const cartItemCount = useCart().itemCount || 0
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border/40 pb-3">
@@ -148,6 +149,13 @@ export function AppSidebar() {
                     <Link to={item.url}>
                       <item.icon className="size-4 shrink-0" />
                       <span>{item.title}</span>
+
+
+                      {item.title === "Cart" && cartItemCount > 0 && (
+                        <span className="ml-auto inline-flex items-center justify-center rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
+                          {cartItemCount}
+                        </span>
+                      )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
