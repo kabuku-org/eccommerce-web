@@ -6,7 +6,7 @@ import { Observable } from "@apollo/client";
 import { useAuthStore } from "../store/auth.store";
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:8000/graphql",
+  uri: import.meta.env.VITE_API_URL || "http://localhost:8000/graphql",
   credentials: "include",
 });
 
@@ -24,7 +24,7 @@ const authLink = new SetContextLink((prevContext) => {
 const errorLink = new ErrorLink(({  operation, forward }) => {
   if (operation.getContext().response?.status === 401) {
     return new Observable((observer) => {
-      fetch("http://localhost:8000/auth/refresh", {
+      fetch(`${import.meta.env.VITE_API_BASE || "http://localhost:8000"}/auth/refresh`, {
         method: "POST",
         credentials: "include",  // sends httpOnly cookie automatically
       })

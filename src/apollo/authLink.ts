@@ -21,7 +21,8 @@ export const authLink = new ApolloLink((operation, forward) => {
                         const status = err?.statusCode || (err?.networkError && err.networkError.statusCode) || null
                         if (status === 401) {
                             try {
-                                const r = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' })
+                                const base = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+                                const r = await fetch(`${base}/auth/refresh`, { method: 'POST', credentials: 'include' })
                                 if (!r.ok) throw new Error('refresh_failed')
                                 const data = await r.json()
                                 if (!data.access_token) throw new Error('no_access_token')

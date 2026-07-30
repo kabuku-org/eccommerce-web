@@ -18,7 +18,8 @@ export async function fetchWithRefresh(input: RequestInfo, init?: RequestInit): 
     if (res.status !== 401) return res
 
     // try refreshing the access token using httpOnly refresh cookie
-    const refreshResp = await fetch('/auth/refresh', { method: 'POST', credentials: 'include' })
+    const base = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+    const refreshResp = await fetch(`${base}/auth/refresh`, { method: 'POST', credentials: 'include' })
     if (!refreshResp.ok) {
         // refresh failed — caller should handle (e.g., redirect to login)
         throw new Error('refresh_failed')
