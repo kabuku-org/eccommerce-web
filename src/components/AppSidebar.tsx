@@ -7,10 +7,10 @@ import {
   XCircle,
   Settings,
   LogOut,
-  ChevronUp,
+  
   Store,
   Home,
-  BadgeInfo,
+  
 } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../hooks/useAuth"

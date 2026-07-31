@@ -79,8 +79,8 @@ function SimpleBarChart({ data, label }: { data: { label: string; value: number 
 
 export function Dashboard() {
   const navigate = useNavigate()
-  const { products, loading: productsLoading } = useProducts()
-  const { orders, loading: ordersLoading } = useAllOrders()
+  const { products } = useProducts()
+  const { orders } = useAllOrders()
   const { customers } = useCustomers()
 
   const totalRevenue = products.reduce((sum, p) => sum + p.price * p.stock, 0)

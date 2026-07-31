@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react"
+import { useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import { useAllOrders } from "../hooks/useOrders"
 import type { order, OrderStatus } from "../types/order.types"
 import { STATUS_STYLES, ORDER_STATUSES } from "../types/order.types"
-import { XCircle, Package } from "lucide-react"
+import {  Package } from "lucide-react"
 
 export function CancelledOrdersPage() {
   const { orders, loading } = useAllOrders()

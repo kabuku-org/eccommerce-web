@@ -4,7 +4,7 @@ import { useAllOrders } from "../hooks/useOrders"
 import { useAuthStore } from "../store/auth.store"
 import type { order, OrderStatus } from "../types/order.types"
 import { STATUS_STYLES, ORDER_STATUSES } from "../types/order.types"
-import { UsersRound, Package, ChevronDown, ChevronUp } from "lucide-react"
+import { UsersRound,  ChevronDown, ChevronUp } from "lucide-react"
 
 type CustomerType = {
   id: string

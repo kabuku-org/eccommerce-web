@@ -9,7 +9,7 @@ import { useIsMobile } from "../../hooks/use-mobile"
 import { cn } from "../../lib/utils"
 import { Button } from "./button"
 import { Input } from "./input"
-import { Separator } from "./separator"
+
 import {
   Sheet,
   SheetContent,
@@ -272,8 +272,8 @@ const SidebarTrigger = React.forwardRef<
       variant="ghost"
       size="icon"
       className={cn("h-7 w-7", className)}
-      onClick={(event: React.MouseEvent) => {
-        onClick?.(event)
+      onClick={(e) => {
+        onClick?.(e)
         toggleSidebar()
       }}
       {...props}
