@@ -1,7 +1,7 @@
 import {useQuery , useMutation} from "@apollo/client/react";
 
-import {CREATE_ORDER , GET_MY_ORDERS , CANCEL_ORDER , CHECKOUT_ORDER} from "../apollo/queries/order.queries"
-import type {CreateOrderResponse , GetMyOrdersResponse , CancelOrderResponse , CheckoutOrderResponse} from "../apollo/queries/order.queries"
+import {CREATE_ORDER , GET_MY_ORDERS , GET_ALL_ORDERS ,CANCEL_ORDER , CHECKOUT_ORDER} from "../apollo/queries/order.queries"
+import type {CreateOrderResponse , GetMyOrdersResponse , CancelOrderResponse , CheckoutOrderResponse, GetAllOrdersResponse} from "../apollo/queries/order.queries"
 
 
 export const useOrders = () => {
@@ -49,10 +49,12 @@ async function cancelOrder(orderId: string) {
         }
     }
 
-    async function checkoutOrder(orderId: string) {
+    async function checkoutOrder(orderId: string, deliveryAddress?: string, pickupLocation?: string) {
         await checkoutOrderMutation({
             variables: {
-                orderId
+                orderId,
+                deliveryAddress: deliveryAddress ?? null,
+                pickupLocation: pickupLocation ?? null
             }
         })
     }
@@ -77,13 +79,13 @@ async function cancelOrder(orderId: string) {
 
 //admin hook -all orders
 export function useAllOrders() {
-    const {data , loading , error , refetch} = useQuery<GetMyOrdersResponse>(GET_MY_ORDERS , {
+    const {data , loading , error , refetch} = useQuery<GetAllOrdersResponse>(GET_ALL_ORDERS , {
         fetchPolicy: "network-only"
     })//meaning do not use cache and always fetch from server
 
 
     return {
-        orders: data?.myOrders ?? [],
+        orders: data?.allOrders ?? [],
         loading,
         error,
         refetch

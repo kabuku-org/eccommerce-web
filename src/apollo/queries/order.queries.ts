@@ -32,6 +32,8 @@ query GetMyOrders {
     }
     totalAmount
     status
+    deliveryAddress
+    pickupLocation
     createdAt
     updatedAt
   }
@@ -58,8 +60,8 @@ mutation CancelOrder($orderId: String!) {
 `
 
 export const CHECKOUT_ORDER = gql`
-mutation CheckoutOrder($orderId: String!) {
-  checkoutOrder(orderId: $orderId) {
+mutation CheckoutOrder($orderId: String!, $deliveryAddress: String, $pickupLocation: String) {
+  checkoutOrder(orderId: $orderId, deliveryAddress: $deliveryAddress, pickupLocation: $pickupLocation) {
     id
     userId
     cart {
@@ -70,6 +72,8 @@ mutation CheckoutOrder($orderId: String!) {
     }
     totalAmount
     status
+    deliveryAddress
+    pickupLocation
     createdAt
     updatedAt
   }
@@ -89,6 +93,8 @@ query GetAllOrders {
     }
     totalAmount
     status
+    deliveryAddress
+    pickupLocation
     createdAt
     updatedAt
   }
@@ -122,26 +128,35 @@ export type OrderItemInput = {
   name: string
 }
 
+// Shared order shape used across all responses
+export type OrderResponseShape = {
+  id: string
+  userId: string
+  cart: OrderItemInput[]
+  totalAmount: number
+  status: 'pending' | 'completed' | 'cancelled' | 'shipped' | 'delivered' | 'picked_up'
+  deliveryAddress?: string
+  pickupLocation?: string
+  createdAt: string
+  updatedAt: string
+}
+
 export type CreateOrderResponse = {
-  createOrder: {
-    id: string
-    userId: string
-    cart: OrderItemInput[]
-    totalAmount: number
-    status: 'pending' | 'completed' | 'cancelled'
-    createdAt: string
-    updatedAt: string
-  }
+  createOrder: OrderResponseShape
 }
 
 export type GetMyOrdersResponse = {
-  myOrders: CreateOrderResponse['createOrder'][]
+  myOrders: OrderResponseShape[]
 }
 
 export type CancelOrderResponse = {
-  cancelOrder: CreateOrderResponse['createOrder']
+  cancelOrder: OrderResponseShape
 }
 
 export type CheckoutOrderResponse = {
-  checkoutOrder: CreateOrderResponse['createOrder']
+  checkoutOrder: OrderResponseShape
+}
+
+export type GetAllOrdersResponse = {
+  allOrders: OrderResponseShape[]
 }

@@ -3,9 +3,10 @@ import type { Product } from '../types/product.types'
 type Props = {
   product: Product
   onAddToCart?: (product: Product) => void
+  inCartCount?: number
 }
 
-export function ProductCard({ product, onAddToCart }: Props) {
+export function ProductCard({ product, onAddToCart, inCartCount = 0 }: Props) {
   const inStock = product.stock > 0
   const hasDiscount = product.isDiscounted && product.discountPrice !== undefined
 
@@ -55,13 +56,20 @@ export function ProductCard({ product, onAddToCart }: Props) {
         </span>
       </div>
 
+      {/* In cart badge */}
+      {inCartCount > 0 && (
+        <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-medium shadow-sm">
+          {inCartCount} in cart
+        </div>
+      )}
+
       {/* Add to cart */}
       <button
         onClick={() => onAddToCart?.(product)}
         disabled={!inStock}
         className="w-full bg-stone-900 text-white py-2 rounded-md text-sm hover:bg-stone-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        {inStock ? 'Add to cart' : 'Out of stock'}
+        {inCartCount > 0 ? `Add another (${inCartCount} in cart)` : inStock ? 'Add to cart' : 'Out of stock'}
       </button>
     </div>
   )

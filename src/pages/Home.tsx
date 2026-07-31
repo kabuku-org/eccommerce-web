@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { NavBar } from '../components/NavBar'
 import { ProductCard } from '../components/ProductsCard'
 import { useProducts } from '../hooks/useProducts'
 import type { Product } from '../types/product.types'
@@ -43,7 +42,7 @@ export function HomeUser() {
   } = useProducts()
 
   const [search, setSearch] = useState('')
-  const { addItem } = useCart()
+  const { addItem, cart } = useCart()
   const user = useAuthStore((state) => state.user)
   const isAdmin = user?.role === 'ADMIN'
   const navigate = useNavigate()
@@ -153,35 +152,39 @@ export function HomeUser() {
   function ProductGrid({ list }: { list: Product[] }) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {list.map((product: Product) => (
-          <div key={product.id} className="relative">
-            <ProductCard
-              product={product}
-              onAddToCart={handleAddToCart}
-            />
+        {list.map((product: Product) => {
+          const cartItem = cart?.items.find(i => i.productId === product.id)
+          return (
+            <div key={product.id} className="relative">
+              <ProductCard
+                product={product}
+                onAddToCart={handleAddToCart}
+                inCartCount={cartItem?.quantity ?? 0}
+              />
 
-            {/* Admin overlay buttons on each card */}
-            {isAdmin && (
-              <div className="absolute top-2 right-2 flex gap-1">
-                <button
-                  onClick={() => startEdit(product)}
-                  className="bg-white border border-stone-300 text-stone-700 px-2 py-1 rounded text-xs hover:bg-stone-50 shadow-sm transition-colors"
-                  title="Edit product"
-                >
-                  ✏️ Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(product.id, product.name)}
-                  disabled={deleteLoading}
-                  className="bg-white border border-red-200 text-red-600 px-2 py-1 rounded text-xs hover:bg-red-50 shadow-sm disabled:opacity-50 transition-colors"
-                  title="Delete product"
-                >
-                  🗑️ Delete
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
+              {/* Admin overlay buttons on each card */}
+              {isAdmin && (
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <button
+                    onClick={() => startEdit(product)}
+                    className="bg-white border border-stone-300 text-stone-700 px-2 py-1 rounded text-xs hover:bg-stone-50 shadow-sm transition-colors"
+                    title="Edit product"
+                  >
+                    ✏️ Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.id, product.name)}
+                    disabled={deleteLoading}
+                    className="bg-white border border-red-200 text-red-600 px-2 py-1 rounded text-xs hover:bg-red-50 shadow-sm disabled:opacity-50 transition-colors"
+                    title="Delete product"
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     )
   }
@@ -493,8 +496,7 @@ export function HomeUser() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <NavBar />
+    <div className="min-h-screen">
       {isAdmin ? <AdminDashboard /> : <CustomerView />}
     </div>
   )

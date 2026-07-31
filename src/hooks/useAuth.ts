@@ -32,7 +32,7 @@ export function useAuth() {
 
     // redirect based on role
     if (user.role === 'ADMIN' ) {
-      navigate('/home')
+      navigate('/dashboard')
     } else {
       navigate('/home')
     }

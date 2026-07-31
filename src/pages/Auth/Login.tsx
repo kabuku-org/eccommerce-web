@@ -13,7 +13,7 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50">
+    <div className="  min-h-screen flex items-center justify-center bg-stone-50">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm bg-white p-8 rounded-lg shadow-sm border border-stone-200"

@@ -7,6 +7,9 @@ import { Cart } from './pages/cart'
 import { Order } from './pages/order'
 import { ReviewsOrderPage } from './pages/ReviewsOrderPage'
 import { CustomersPage } from './pages/CustomersPage'
+import { CancelledOrdersPage } from './pages/CancelledOrdersPage'
+import { Dashboard } from './pages/Auth/DashBoard'
+import { AdminProductsPage } from './pages/Auth/AdminProductsPage'
 
 
 export function App() {
@@ -22,9 +25,12 @@ export function App() {
           <Route path="/home" element={<HomeUser />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/orders" element={<Order />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin/reviews" element={<ReviewsOrderPage />} />
+          <Route path="/admin/orders" element={<CancelledOrdersPage />} />
+          <Route path="/admin/cancelled-orders" element={<CancelledOrdersPage />} />
+          <Route path="/admin/products" element={<AdminProductsPage />} />
           <Route path="/admin/customers" element={<CustomersPage />} />
-          {/* Dashboard features are now embedded in /home based on user role */}
           {/* Add more protected routes as needed */}
         </Route>
       </Routes>

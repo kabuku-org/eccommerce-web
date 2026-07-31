@@ -1,4 +1,3 @@
-import { NavBar } from "../components/NavBar";
 import { useReviews } from "../hooks/useReviews";
 import { useAuthStore } from "../store/auth.store";
 
@@ -21,8 +20,7 @@ export function ReviewsOrderPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-stone-50">
-        <NavBar />
+      <div className="min-h-screen">
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
           <h1 className="text-2xl font-semibold text-stone-900 mb-4">
             Access Denied
@@ -36,8 +34,7 @@ export function ReviewsOrderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <NavBar />
+    <div className="min-h-screen">
       <main className="max-w-4xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-semibold text-stone-900 mb-8">Product Reviews</h1>
 
