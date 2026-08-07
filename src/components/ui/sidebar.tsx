@@ -228,6 +228,7 @@ const Sidebar = React.forwardRef<
         ref={ref}
         data-slot="sidebar-container"
         data-side={side}
+        data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         className="group peer hidden md:block"
         {...props}
