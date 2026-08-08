@@ -66,26 +66,7 @@ const adminNavItems = [
     url: "/admin/orders",
     icon: ShoppingCart,
   },
-  {
-    title: "Reviewed Orders",
-    url: "/admin/reviews",
-    icon: Star,
-  },
-  {
-    title: "Cancelled Orders",
-    url: "/admin/cancelled-orders",
-    icon: XCircle,
-  },
-  {
-    title: "All Customers",
-    url: "/admin/customers",
-    icon: Users,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
+  
 ]
 
 export function AppSidebar() {
