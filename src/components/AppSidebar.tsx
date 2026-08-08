@@ -2,12 +2,8 @@ import {
   LayoutDashboard,
   ShoppingCart,
   Package,
-  Users,
-  Star,
-  XCircle,
-  Settings,
-  LogOut,
-  
+  Users, 
+  LogOut, 
   Store,
   Home,
   
@@ -65,6 +61,12 @@ const adminNavItems = [
     title: "All Orders",
     url: "/admin/orders",
     icon: ShoppingCart,
+  },
+  
+  {
+    title: "All Customers",
+    url: "/admin/customers",
+    icon: Users,
   },
   
 ]
