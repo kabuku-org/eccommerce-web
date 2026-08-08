@@ -31,7 +31,7 @@ import {
 //cart number count
 import { useCart } from "../hooks/useCart"
 // Items visible to both CUSTOMER and ADMIN
-const commonNavItems = [
+const customerNavItems = [
   {
     title: "Home",
     url: "/home",
@@ -94,6 +94,7 @@ export function AppSidebar() {
   const { logout } = useAuth()
   const user = useAuthStore((state) => state.user)
   const isAdmin = user?.role === "ADMIN"
+  const isCustomer = user?.role === "CUSTOMER" 
 
   const handleLogout = () => {
     logout()
@@ -132,13 +133,21 @@ export function AppSidebar() {
 
       <SidebarContent className="py-2">
         {/* Shopping section — everyone sees this */}
-        <SidebarGroup>
+        
+        
           <SidebarGroupLabel className="px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50">
             Shopping
           </SidebarGroupLabel>
+
+        {/* Customer section — only CUSTOMER role sees this */}
+        {isCustomer && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50">
+              Customer
+            </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {commonNavItems.map((item) => (
+              {customerNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
@@ -163,6 +172,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        )}
 
         {/* Admin section — only ADMIN role sees this */}
         {isAdmin && (
