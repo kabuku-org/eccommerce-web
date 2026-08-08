@@ -17,12 +17,13 @@ export function App() {
     <BrowserRouter>
       <Routes>
         
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<HomeUser />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
        
        {/* Add protected routes here */}
         <Route element={<ProtectedRoutes />}>
-          <Route path="/home" element={<HomeUser />} />
+          
           <Route path="/cart" element={<Cart />} />
           <Route path="/orders" element={<Order />} />
           <Route path="/dashboard" element={<Dashboard />} />

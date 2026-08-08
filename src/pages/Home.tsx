@@ -46,7 +46,7 @@ export function HomeUser() {
   const user = useAuthStore((state) => state.user)
   const isAdmin = user?.role === 'ADMIN'
   const navigate = useNavigate()
-
+  const isGuest = !user
   // ── Admin-only state ────────────────────────────────
   const [form, setForm] = useState<FormState>(emptyForm)
   const [editing, setEditing] = useState<Product | null>(null)
@@ -59,7 +59,7 @@ export function HomeUser() {
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.description.toLowerCase().includes(search.toLowerCase())
   )
-
+  
   // admin filtered list (for the CRUD list below the grid)
   const adminFiltered = products.filter((p: Product) =>
     p.name.toLowerCase().includes(adminSearch.toLowerCase())
@@ -493,6 +493,88 @@ export function HomeUser() {
         )}
       </main>
     )
+  }
+
+  // ── Guest User View ──────────────────────
+  function GuestView() {
+    return (
+      <main className="container mx-auto px-6 py-10">
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold text-black-900 mb-4 bg-green-100 p-4 rounded-lg shadow-sm">
+            Welcome to our store guest i see you ehh  
+          </h1> 
+             <p className="text-stone-500 mb-6">
+            Please log in or sign up to view products and make purchases.
+          </p>
+          <div className="flex justify-center gap-4 mb-10  bg-blue-100 p-4 rounded-lg shadow-sm">
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-green-900 text-white px-6 py-3 rounded-md hover:bg-green-500 transition-colors pl-4 pr-4"
+            >
+              Log In
+            </button>
+            <button
+              onClick={() => navigate('/signup')}
+              className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition-colors"
+            >
+              Sign Up
+            </button>
+          </div>
+            <h1>this is the product in our store </h1>
+            <main className="max-w-6xl mx-auto px-6 py-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-semibold text-stone-900">Products</h1>
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-4 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 w-64"
+          />
+        </div>
+
+        {/* States */}
+        {loading && (
+          <p className="text-stone-500 text-center py-20">
+            Loading products...
+          </p>
+        )}
+
+        {error && (
+          <p className="text-red-600 text-center py-20">
+            Failed to load products. Is the backend running? {error.message}
+          </p>
+        )}
+
+        {!loading && !error && filtered.length === 0 && (
+          <p className="text-stone-400 text-center py-20">
+            {search ? 'No products match your search.' : 'No products yet.'}
+          </p>
+        )}
+
+        {/* Grid */}
+        {!loading && !error && filtered.length > 0 && (
+          <ProductGrid list={filtered} />
+        )}
+      </main>
+          
+        </div>
+      </main>
+    )
+  }
+
+  // ── Main render ───────────────────────────
+  if (isGuest) {
+    return <GuestView />
+  }
+
+  if (isAdmin) {
+    return <AdminDashboard />
+  }
+
+  if (!isAdmin && !isGuest) {
+    return <CustomerView />
   }
 
   return (
