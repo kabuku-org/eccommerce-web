@@ -1,10 +1,17 @@
 import { useState } from 'react'
-import { ProductCard } from '../components/ProductsCard'
-import { useProducts } from '../hooks/useProducts'
-import type { Product } from '../types/product.types'
 import { useNavigate } from 'react-router-dom'
+import type { Product } from '../types/product.types'
+import { useProducts } from '../hooks/useProducts'
 import { useCart } from '../hooks/useCart'
 import { useAuthStore } from '../store/auth.store'
+import { StoreNavbar } from '../components/StoreNavbar'
+import { HeroSection } from '../components/HeroSection'
+import { ProductToolbar } from '../components/ProductToolbar'
+import { ProductGrid } from '../components/ProductGrid'
+import { ProductGridSkeleton } from '../components/ProductSkeleton'
+import { EmptyProducts } from '../components/EmptyProducts'
+import { FloatingCart } from '../components/FloatingCart'
+import { AlertTriangle } from 'lucide-react'
 
 type FormState = {
   name: string
@@ -33,6 +40,168 @@ export function HomeUser() {
     products,
     loading,
     error,
+  } = useProducts()
+
+  const [search, setSearch] = useState('')
+  const { addItem, cart } = useCart()
+  const user = useAuthStore((state) => state.user)
+  const isAdmin = user?.role === 'ADMIN'
+  const navigate = useNavigate()
+  const isGuest = !user
+
+  const filtered = products.filter(
+    (p: Product) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.description.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const cartItems: Record<string, number> = {}
+  if (cart?.items) {
+    for (const item of cart.items) {
+      cartItems[item.productId] = item.quantity
+    }
+  }
+
+  function handleAddToCart(product: Product) {
+    if (!user) {
+      navigate('/login')
+      return
+    }
+    if (product.stock <= 0) return
+    try {
+      addItem(product.id)
+    } catch {
+      console.error('Failed to add item to cart')
+    }
+  }
+
+  const cartTotal = cart?.total ?? 0
+  const cartItemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+
+  // ── Guest View ──────────────────────────────────────
+  if (isGuest) {
+    return (
+      <div className="min-h-screen bg-[#faf9f6]">
+        <StoreNavbar />
+        <HeroSection isLoggedIn={false} onShopClick={() => navigate('/login')} />
+
+        <main className="max-w-7xl mx-auto px-6 py-10">
+          <ProductToolbar
+            search={search}
+            onSearchChange={setSearch}
+            resultCount={filtered.length}
+            totalCount={products.length}
+          />
+
+          {loading && <ProductGridSkeleton />}
+
+          {error && (
+            <div className="border-2 border-red-300 bg-red-50 p-6 text-center">
+              <AlertTriangle className="size-8 text-red-400 mx-auto mb-3" />
+              <p className="text-red-700 font-bold uppercase tracking-wide text-sm">
+                Failed to load products
+              </p>
+              <p className="text-red-600 text-sm mt-1">{error.message}</p>
+            </div>
+          )}
+
+          {!loading && !error && filtered.length === 0 && (
+            <EmptyProducts isSearch={!!search} searchTerm={search} />
+          )}
+
+          {!loading && !error && filtered.length > 0 && (
+            <ProductGrid products={filtered} />
+          )}
+
+          {/* Guest CTA */}
+          <div className="mt-16 border-2 border-black bg-white shadow-[8px_8px_0px_0px_#000] p-10 text-center">
+            <h2 className="text-2xl font-black uppercase tracking-tight text-black mb-3">
+              Sign in to shop
+            </h2>
+            <p className="text-stone-500 text-sm mb-6 max-w-md mx-auto">
+              Create an account to start adding books to your cart and placing orders.
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => navigate('/login')}
+                className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all"
+              >
+                Sign in
+              </button>
+              <button
+                onClick={() => navigate('/signup')}
+                className="bg-white text-black px-8 py-3 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all"
+              >
+                Create account
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // ── Customer View ───────────────────────────────────
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#faf9f6]">
+        <StoreNavbar />
+        <HeroSection isLoggedIn={true} onShopClick={() => {
+          document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })
+        }} />
+
+        <main className="max-w-7xl mx-auto px-6 py-10" id="collection">
+          <ProductToolbar
+            search={search}
+            onSearchChange={setSearch}
+            resultCount={filtered.length}
+            totalCount={products.length}
+          />
+
+          {loading && <ProductGridSkeleton />}
+
+          {error && (
+            <div className="border-2 border-red-300 bg-red-50 p-6 text-center">
+              <AlertTriangle className="size-8 text-red-400 mx-auto mb-3" />
+              <p className="text-red-700 font-bold uppercase tracking-wide text-sm">
+                Failed to load products
+              </p>
+              <p className="text-red-600 text-sm mt-1">{error.message}</p>
+            </div>
+          )}
+
+          {!loading && !error && filtered.length === 0 && (
+            <EmptyProducts isSearch={!!search} searchTerm={search} />
+          )}
+
+          {!loading && !error && filtered.length > 0 && (
+            <ProductGrid
+              products={filtered}
+              onAddToCart={handleAddToCart}
+              cartItems={cartItems}
+            />
+          )}
+        </main>
+
+        <FloatingCart
+          itemCount={cartItemCount}
+          total={cartTotal}
+          onClick={() => navigate('/cart')}
+        />
+      </div>
+    )
+  }
+
+  // ── Admin View ──────────────────────────────────────
+  return <AdminDashboard />
+}
+
+// ── Admin Dashboard (separate component) ─────────────
+function AdminDashboard() {
+  const {
+    products,
+    loading,
+    error,
     createProduct,
     updateProduct,
     deleteProduct,
@@ -42,42 +211,29 @@ export function HomeUser() {
   } = useProducts()
 
   const [search, setSearch] = useState('')
-  const { addItem, cart } = useCart()
-  const user = useAuthStore((state) => state.user)
-  const isAdmin = user?.role === 'ADMIN'
-  const navigate = useNavigate()
-  const isGuest = !user
-  // ── Admin-only state ────────────────────────────────
   const [form, setForm] = useState<FormState>(emptyForm)
   const [editing, setEditing] = useState<Product | null>(null)
   const [message, setMessage] = useState('')
   const [adminSearch, setAdminSearch] = useState('')
+  const { addItem, cart } = useCart()
 
-  // filter client-side by name or description
   const filtered = products.filter(
     (p: Product) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.description.toLowerCase().includes(search.toLowerCase())
   )
-  
-  // admin filtered list (for the CRUD list below the grid)
+
   const adminFiltered = products.filter((p: Product) =>
     p.name.toLowerCase().includes(adminSearch.toLowerCase())
   )
 
-  function handleAddToCart(product: Product) {
-    if (!user) {
-      navigate('/login')
-      return
-    }
-    try {
-      addItem(product.id)
-    } catch (error) {
-      console.error('Failed to add item to cart:', error)
+  const cartItems: Record<string, number> = {}
+  if (cart?.items) {
+    for (const item of cart.items) {
+      cartItems[item.productId] = item.quantity
     }
   }
 
-  // ── Admin form handlers ─────────────────────────────
   function handleFormChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
@@ -96,8 +252,8 @@ export function HomeUser() {
       })
       setForm(emptyForm)
       setMessage('Product created successfully.')
-    } catch (err: any) {
-      setMessage(err.message)
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Failed to create product')
     }
   }
 
@@ -128,13 +284,13 @@ export function HomeUser() {
         imageUrl: form.imageUrl || 'https://via.placeholder.com/150',
         discountPrice: form.discountPrice ? parseFloat(form.discountPrice) : undefined,
         discountTag: form.discountTag || undefined,
-        isDiscounted: form.discountPrice ? true : false,
+        isDiscounted: !!form.discountPrice,
       })
       setEditing(null)
       setForm(emptyForm)
       setMessage('Product updated successfully.')
-    } catch (err: any) {
-      setMessage(err.message)
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Failed to update product')
     }
   }
 
@@ -143,62 +299,31 @@ export function HomeUser() {
     try {
       await deleteProduct(id)
       setMessage(`"${name}" deleted.`)
-    } catch (err: any) {
-      setMessage(err.message)
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Failed to delete product')
     }
   }
 
-  // ── Product grid (shared by both views) ─────────────
-  function ProductGrid({ list }: { list: Product[] }) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {list.map((product: Product) => {
-          const cartItem = cart?.items.find(i => i.productId === product.id)
-          return (
-            <div key={product.id} className="relative">
-              <ProductCard
-                product={product}
-                onAddToCart={handleAddToCart}
-                inCartCount={cartItem?.quantity ?? 0}
-              />
-
-              {/* Admin overlay buttons on each card */}
-              {isAdmin && (
-                <div className="absolute top-2 right-2 flex gap-1">
-                  <button
-                    onClick={() => startEdit(product)}
-                    className="bg-white border border-stone-300 text-stone-700 px-2 py-1 rounded text-xs hover:bg-stone-50 shadow-sm transition-colors"
-                    title="Edit product"
-                  >
-                    ✏️ Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product.id, product.name)}
-                    disabled={deleteLoading}
-                    className="bg-white border border-red-200 text-red-600 px-2 py-1 rounded text-xs hover:bg-red-50 shadow-sm disabled:opacity-50 transition-colors"
-                    title="Delete product"
-                  >
-                    🗑️ Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
-    )
+  function handleAddToCart(product: Product) {
+    if (product.stock <= 0) return
+    try {
+      addItem(product.id)
+    } catch (err) {
+      console.error('Failed to add item to cart:', err)
+    }
   }
 
-  // ── Admin Dashboard View ────────────────────────────
-  function AdminDashboard() {
-    return (
-      <main className="max-w-6xl mx-auto px-6 py-10">
-        <h1 className="text-2xl font-semibold text-stone-900 mb-8">
+  return (
+    <div className="min-h-screen bg-[#faf9f6]">
+      <StoreNavbar />
+
+      <main className="max-w-7xl mx-auto px-6 py-10">
+        <h1 className="text-3xl font-black uppercase tracking-tight text-black mb-8">
           Admin Dashboard
         </h1>
 
         {/* Metrics */}
-        <div className="grid grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           {[
             { label: 'Total Products', value: products.length },
             { label: 'Total Orders', value: '—' },
@@ -206,29 +331,31 @@ export function HomeUser() {
           ].map((m) => (
             <div
               key={m.label}
-              className="bg-white border border-stone-200 rounded-lg p-5"
+              className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_#000]"
             >
-              <p className="text-stone-500 text-sm">{m.label}</p>
-              <p className="text-2xl font-semibold text-stone-900 mt-1">
-                {m.value}
-              </p>
+              <p className="text-stone-500 text-xs font-bold uppercase tracking-widest">{m.label}</p>
+              <p className="text-3xl font-black text-black mt-1">{m.value}</p>
             </div>
           ))}
         </div>
 
         {/* Feedback message */}
         {message && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3 rounded-md flex justify-between">
-            <span>{message}</span>
-            <button onClick={() => setMessage('')} className="font-bold">
+          <div className="mb-6 border-2 border-green-300 bg-green-50 text-green-800 text-sm px-4 py-3 flex justify-between items-center">
+            <span className="font-medium">{message}</span>
+            <button
+              onClick={() => setMessage('')}
+              aria-label="Dismiss message"
+              className="font-bold text-green-700 hover:text-green-900 ml-4"
+            >
               ×
             </button>
           </div>
         )}
 
         {/* Create / Edit form */}
-        <div className="bg-white border border-stone-200 rounded-lg p-6 mb-10">
-          <h2 className="text-base font-semibold text-stone-900 mb-4">
+        <div className="border-2 border-black bg-white p-6 mb-10 shadow-[6px_6px_0px_0px_#000]">
+          <h2 className="text-lg font-black uppercase tracking-wide text-black mb-4">
             {editing ? `Editing: ${editing.name}` : 'Add New Product'}
           </h2>
 
@@ -237,34 +364,33 @@ export function HomeUser() {
             className="grid grid-cols-2 gap-4"
           >
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-sm text-stone-600 mb-1">Name</label>
+              <label htmlFor="form-name" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Name</label>
               <input
+                id="form-name"
                 name="name"
                 value={form.name}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               />
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-sm text-stone-600 mb-1">
-                Description
-              </label>
+              <label htmlFor="form-desc" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Description</label>
               <input
+                id="form-desc"
                 name="description"
                 value={form.description}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-stone-600 mb-1">
-                Price (KES)
-              </label>
+              <label htmlFor="form-price" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Price (KES)</label>
               <input
+                id="form-price"
                 name="price"
                 type="number"
                 min="0"
@@ -272,62 +398,60 @@ export function HomeUser() {
                 value={form.price}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-stone-600 mb-1">Stock</label>
+              <label htmlFor="form-stock" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Stock</label>
               <input
+                id="form-stock"
                 name="stock"
                 type="number"
                 min="0"
                 value={form.stock}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               />
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-sm text-stone-600 mb-1">
-                Image URL
-              </label>
+              <label htmlFor="form-image" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Image URL</label>
               <input
+                id="form-image"
                 name="imageUrl"
                 value={form.imageUrl}
                 onChange={handleFormChange}
                 placeholder="https://example.com/image.jpg"
-                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               />
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <label className="block text-sm text-stone-600 mb-1">
-                Discount Price (KES)
-              </label>
+              <label htmlFor="form-discount-price" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Discount Price (KES)</label>
               <input
+                id="form-discount-price"
                 name="discountPrice"
                 type="number"
                 min="0"
                 step="0.01"
                 value={form.discountPrice}
                 onChange={handleFormChange}
-                placeholder="Only for updating products"
-                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                placeholder="Optional"
+                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm text-stone-600 mb-1">
-                Discount Tag
-              </label>
+              <label htmlFor="form-discount-tag" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Discount Tag</label>
               <input
+                id="form-discount-tag"
                 name="discountTag"
                 value={form.discountTag}
                 onChange={handleFormChange}
-                placeholder="e.g., Holiday Special, Black Friday (optional)"
-                className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                placeholder="e.g., Holiday Special (optional)"
+                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               />
             </div>
 
@@ -335,25 +459,18 @@ export function HomeUser() {
               <button
                 type="submit"
                 disabled={createLoading || updateLoading}
-                className="bg-stone-900 text-white px-6 py-2 rounded-md text-sm hover:bg-stone-800 disabled:opacity-50"
+                className="bg-black text-white px-6 py-2.5 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 {editing
-                  ? updateLoading
-                    ? 'Saving...'
-                    : 'Save Changes'
-                  : createLoading
-                  ? 'Creating...'
-                  : 'Create Product'}
+                  ? updateLoading ? 'Saving...' : 'Save Changes'
+                  : createLoading ? 'Creating...' : 'Create Product'}
               </button>
 
               {editing && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setEditing(null)
-                    setForm(emptyForm)
-                  }}
-                  className="border border-stone-300 text-stone-700 px-6 py-2 rounded-md text-sm hover:bg-stone-50"
+                  onClick={() => { setEditing(null); setForm(emptyForm) }}
+                  className="bg-white text-black px-6 py-2.5 text-sm font-bold uppercase tracking-wider border-2 border-black hover:bg-stone-100 transition-colors"
                 >
                   Cancel
                 </button>
@@ -362,85 +479,97 @@ export function HomeUser() {
           </form>
         </div>
 
-        {/* Product grid with search — admin can shop + edit/delete */}
+        {/* Product grid */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-stone-900">
-              All Products
-            </h2>
+            <h2 className="text-lg font-black uppercase tracking-wide text-black">All Products</h2>
             <input
               type="text"
               placeholder="Search products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="px-4 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 w-64"
+              aria-label="Search products"
+              className="px-4 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 w-64"
             />
           </div>
 
-          {loading && (
-            <p className="text-stone-500 text-center py-20">
-              Loading products...
-            </p>
-          )}
+          {loading && <ProductGridSkeleton />}
 
           {error && (
-            <p className="text-red-600 text-center py-20">
-              Failed to load products. Is the backend running? {error.message}
-            </p>
+            <div className="border-2 border-red-300 bg-red-50 p-6 text-center">
+              <AlertTriangle className="size-8 text-red-400 mx-auto mb-3" />
+              <p className="text-red-700 font-bold uppercase tracking-wide text-sm">Failed to load products</p>
+              <p className="text-red-600 text-sm mt-1">{error.message}</p>
+            </div>
           )}
 
           {!loading && !error && filtered.length === 0 && (
-            <p className="text-stone-400 text-center py-20">
-              {search ? 'No products match your search.' : 'No products yet.'}
-            </p>
+            <EmptyProducts isSearch={!!search} searchTerm={search} />
           )}
 
           {!loading && !error && filtered.length > 0 && (
-            <ProductGrid list={filtered} />
+            <ProductGrid
+              products={filtered}
+              onAddToCart={handleAddToCart}
+              cartItems={cartItems}
+              isAdmin
+              onEdit={startEdit}
+              onDelete={handleDelete}
+              deleteLoading={deleteLoading}
+            />
           )}
         </div>
 
-        {/* CRUD list with separate search for update/delete */}
+        {/* CRUD list */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-stone-900">
-              Manage Products
-            </h2>
+            <h2 className="text-lg font-black uppercase tracking-wide text-black">Manage Products</h2>
             <input
               type="text"
               placeholder="Search to update or delete..."
               value={adminSearch}
               onChange={(e) => setAdminSearch(e.target.value)}
-              className="px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 w-64"
+              aria-label="Search products to manage"
+              className="px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 w-64"
             />
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {adminFiltered.map((product: Product) => (
               <div
                 key={product.id}
-                className="bg-white border border-stone-200 rounded-lg px-5 py-4 flex items-center justify-between"
+                className="border-2 border-black bg-white px-5 py-4 flex items-center justify-between shadow-[3px_3px_0px_0px_#000]"
               >
                 <div>
-                  <p className="font-medium text-stone-900">{product.name}</p>
+                  <p className="font-bold text-black">{product.name}</p>
                   <p className="text-stone-500 text-sm">
-                    KES {product.price.toLocaleString()} · {product.stock} in
-                    stock
+                    KES {product.price.toLocaleString()} · {product.stock} in stock
                   </p>
                 </div>
 
                 <div className="flex gap-2">
                   <button
                     onClick={() => startEdit(product)}
-                    className="border border-stone-300 text-stone-700 px-4 py-1.5 rounded text-sm hover:bg-stone-50"
+                    aria-label={`Edit ${product.name}`}
+                    className="flex items-center gap-1 border-2 border-black px-4 py-1.5 text-sm font-bold hover:bg-yellow-300 transition-colors"
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                      <path d="m15 5 4 4" />
+                    </svg>
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(product.id, product.name)}
                     disabled={deleteLoading}
-                    className="bg-red-50 border border-red-200 text-red-700 px-4 py-1.5 rounded text-sm hover:bg-red-100 disabled:opacity-50"
+                    aria-label={`Delete ${product.name}`}
+                    className="flex items-center gap-1 bg-red-50 border-2 border-red-300 text-red-700 px-4 py-1.5 text-sm font-bold hover:bg-red-100 disabled:opacity-40 transition-colors"
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18" />
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
                     Delete
                   </button>
                 </div>
@@ -449,137 +578,6 @@ export function HomeUser() {
           </div>
         </div>
       </main>
-    )
-  }
-
-  // ── Customer Product Grid View ──────────────────────
-  function CustomerView() {
-    return (
-      <main className="max-w-6xl mx-auto px-6 py-10">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-semibold text-stone-900">Products</h1>
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 w-64"
-          />
-        </div>
-
-        {/* States */}
-        {loading && (
-          <p className="text-stone-500 text-center py-20">
-            Loading products...
-          </p>
-        )}
-
-        {error && (
-          <p className="text-red-600 text-center py-20">
-            Failed to load products. Is the backend running? {error.message}
-          </p>
-        )}
-
-        {!loading && !error && filtered.length === 0 && (
-          <p className="text-stone-400 text-center py-20">
-            {search ? 'No products match your search.' : 'No products yet.'}
-          </p>
-        )}
-
-        {/* Grid */}
-        {!loading && !error && filtered.length > 0 && (
-          <ProductGrid list={filtered} />
-        )}
-      </main>
-    )
-  }
-
-  // ── Guest User View ──────────────────────
-  function GuestView() {
-    return (
-      <main className="container mx-auto px-6 py-10">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold text-black-900 mb-4 bg-green-100 p-4 rounded-lg shadow-sm">
-            Welcome to our store guest i see you ehh  
-          </h1> 
-             <p className="text-stone-500 mb-6">
-            Please log in or sign up to view products and make purchases.
-          </p>
-          <div className="flex justify-center gap-4 mb-10  bg-blue-100 p-4 rounded-lg shadow-sm">
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-green-900 text-white px-6 py-3 rounded-md hover:bg-green-500 transition-colors pl-4 pr-4"
-            >
-              Log In
-            </button>
-            <button
-              onClick={() => navigate('/signup')}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition-colors"
-            >
-              Sign Up
-            </button>
-          </div>
-            <h1>this is the product in our store </h1>
-            <main className="max-w-6xl mx-auto px-6 py-10">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-semibold text-stone-900">Products</h1>
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 w-64"
-          />
-        </div>
-
-        {/* States */}
-        {loading && (
-          <p className="text-stone-500 text-center py-20">
-            Loading products...
-          </p>
-        )}
-
-        {error && (
-          <p className="text-red-600 text-center py-20">
-            Failed to load products. Is the backend running? {error.message}
-          </p>
-        )}
-
-        {!loading && !error && filtered.length === 0 && (
-          <p className="text-stone-400 text-center py-20">
-            {search ? 'No products match your search.' : 'No products yet.'}
-          </p>
-        )}
-
-        {/* Grid */}
-        {!loading && !error && filtered.length > 0 && (
-          <ProductGrid list={filtered} />
-        )}
-      </main>
-          
-        </div>
-      </main>
-    )
-  }
-
-  // ── Main render ───────────────────────────
-  if (isGuest) {
-    return <GuestView />
-  }
-
-  if (isAdmin) {
-    return <AdminDashboard />
-  }
-
-  if (!isAdmin && !isGuest) {
-    return <CustomerView />
-  }
-
-  return (
-    <div className="min-h-screen">
-      {isAdmin ? <AdminDashboard /> : <CustomerView />}
     </div>
   )
 }
