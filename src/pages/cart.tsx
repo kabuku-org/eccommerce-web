@@ -33,7 +33,6 @@ export function Cart() {
   } = useOrders()
   const [checkoutOrderData, setCheckoutOrderData] = useState<order | null>(null)
 
-  // Build a stock lookup from products
   const stockMap = useMemo(() => {
     const map: Record<string, number> = {}
     for (const p of allProducts) {
@@ -52,12 +51,11 @@ export function Cart() {
       if (createdOrder) {
         setCheckoutOrderData(createdOrder)
       }
-    } catch (error) {
-      console.error('Error placing order:', error)
+    } catch (err) {
+      console.error('Error placing order:', err)
     }
   }
 
-  // Check if any cart item exceeds known stock
   const hasStockIssues = cart?.items.some((item) => {
     const stock = stockMap[item.productId]
     return stock !== undefined && item.quantity > stock
@@ -65,12 +63,12 @@ export function Cart() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#faf9f6]">
+      <div className="min-h-screen bg-slate-50">
         <StoreNavbar />
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
-          <div className="border-2 border-stone-200 bg-white p-10">
-            <ShoppingCart className="size-12 text-stone-300 mx-auto mb-4 animate-pulse" />
-            <h1 className="text-xl font-black uppercase tracking-wide text-stone-900">
+          <div className="bg-white border border-slate-200 rounded-2xl p-10 shadow-sm">
+            <ShoppingCart className="size-12 text-slate-200 mx-auto mb-4 animate-pulse" />
+            <h1 className="text-xl font-semibold text-slate-900">
               Loading your cart...
             </h1>
           </div>
@@ -81,15 +79,15 @@ export function Cart() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#faf9f6]">
+      <div className="min-h-screen bg-slate-50">
         <StoreNavbar />
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
-          <div className="border-2 border-red-300 bg-red-50 p-10">
-            <AlertTriangle className="size-12 text-red-400 mx-auto mb-4" />
-            <h1 className="text-xl font-black uppercase tracking-wide text-red-800">
+          <div className="border border-red-200 bg-red-50 rounded-2xl p-10">
+            <AlertTriangle className="size-12 text-red-300 mx-auto mb-4" />
+            <h1 className="text-xl font-semibold text-red-800">
               Error loading your cart
             </h1>
-            <p className="text-red-600 text-sm mt-2">{error.message}</p>
+            <p className="text-red-500 text-sm mt-2">{error.message}</p>
           </div>
         </main>
       </div>
@@ -98,20 +96,20 @@ export function Cart() {
 
   if (!cart || itemCount === 0) {
     return (
-      <div className="min-h-screen bg-[#faf9f6]">
+      <div className="min-h-screen bg-slate-50">
         <StoreNavbar />
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
-          <div className="border-2 border-black bg-white p-10 shadow-[6px_6px_0px_0px_#000]">
-            <ShoppingCart className="size-12 text-stone-300 mx-auto mb-4" />
-            <h1 className="text-xl font-black uppercase tracking-wide text-black mb-2">
+          <div className="bg-white border border-slate-200 rounded-2xl p-10 shadow-sm">
+            <ShoppingCart className="size-12 text-slate-200 mx-auto mb-4" />
+            <h1 className="text-xl font-semibold text-slate-900 mb-2">
               Your cart is empty
             </h1>
-            <p className="text-stone-500 text-sm mb-6">
+            <p className="text-slate-500 text-sm mb-6">
               Looks like you haven't added any items yet.
             </p>
             <button
               onClick={() => navigate('/')}
-              className="inline-flex items-center gap-2 bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2 bg-slate-950 text-white px-8 py-3 text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors"
             >
               <ShoppingCart className="size-4" />
               Browse Products
@@ -123,28 +121,28 @@ export function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f6]">
+    <div className="min-h-screen bg-slate-50">
       <StoreNavbar />
 
       <main className="max-w-3xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-black uppercase tracking-tight text-black">
+          <h1 className="text-2xl font-semibold text-slate-900">
             Your Cart
           </h1>
-          <span className="text-xs font-bold uppercase tracking-widest text-stone-500 border-2 border-stone-300 px-3 py-1">
+          <span className="text-sm text-slate-500">
             {itemCount} {itemCount === 1 ? 'item' : 'items'}
           </span>
         </div>
 
         {/* Stock issues warning */}
         {hasStockIssues && (
-          <div className="border-2 border-amber-300 bg-amber-50 p-4 mb-4 flex items-start gap-3">
-            <AlertTriangle className="size-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="border border-amber-200 bg-amber-50 rounded-2xl p-4 mb-4 flex items-start gap-3">
+            <AlertTriangle className="size-5 text-amber-500 shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-bold text-amber-800 uppercase tracking-wide">
+              <p className="text-sm font-semibold text-amber-800">
                 Stock has changed
               </p>
-              <p className="text-sm text-amber-700 mt-1">
+              <p className="text-sm text-amber-600 mt-1">
                 Some items in your cart exceed currently available stock. Please adjust quantities before checkout.
               </p>
             </div>
@@ -159,16 +157,16 @@ export function Cart() {
             return (
               <li
                 key={item.productId}
-                className={`border-2 border-black bg-white p-4 flex flex-col sm:flex-row justify-between gap-4 shadow-[4px_4px_0px_0px_#000] ${
-                  isOverStock ? 'border-red-400 bg-red-50' : ''
+                className={`bg-white border rounded-2xl p-4 flex flex-col sm:flex-row justify-between gap-4 shadow-sm ${
+                  isOverStock ? 'border-red-300 bg-red-50/50' : 'border-slate-200'
                 }`}
               >
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold text-black">{item.name}</h2>
-                  <p className="text-stone-700 text-sm">
+                  <h2 className="text-base font-semibold text-slate-900">{item.name}</h2>
+                  <p className="text-slate-500 text-sm">
                     KES {item.price.toLocaleString()} each
                   </p>
-                  <p className="text-stone-500 text-xs">
+                  <p className="text-slate-400 text-xs">
                     Subtotal: KES {(item.price * item.quantity).toLocaleString()}
                   </p>
 
@@ -179,7 +177,7 @@ export function Cart() {
                   )}
 
                   {isOverStock && (
-                    <p className="text-red-600 text-xs font-bold mt-1 uppercase tracking-wide">
+                    <p className="text-red-500 text-xs font-medium mt-1">
                       Quantity ({item.quantity}) exceeds stock ({stock})
                     </p>
                   )}
@@ -199,9 +197,9 @@ export function Cart() {
                     onClick={() => removeItem(item.productId, item.quantity)}
                     disabled={removeLoading}
                     aria-label={`Remove ${item.name} from cart`}
-                    className="inline-flex items-center gap-1.5 bg-red-50 text-red-600 px-3 py-2 border-2 border-red-300 text-xs font-bold uppercase tracking-wider hover:bg-red-100 disabled:opacity-50 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-red-500 px-3 py-2 border border-red-200 rounded-xl text-sm font-medium hover:bg-red-50 disabled:opacity-50 transition-colors"
                   >
-                    <Trash2 className="size-3" />
+                    <Trash2 className="size-3.5" />
                     Remove
                   </button>
                 </div>
@@ -211,24 +209,24 @@ export function Cart() {
         </ul>
 
         {/* Total + Checkout */}
-        <div className="mt-6 border-2 border-black bg-white p-6 shadow-[6px_6px_0px_0px_#000]">
+        <div className="mt-6 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Total</span>
-            <span className="text-2xl font-black text-black">
+            <span className="text-sm text-slate-500">Total</span>
+            <span className="text-2xl font-semibold text-slate-900">
               KES {cart.total.toLocaleString()}
             </span>
           </div>
 
           {createError && (
-            <div className="border-2 border-red-300 bg-red-50 p-3 mb-4">
-              <p className="text-red-700 text-sm font-medium">{createError.message}</p>
+            <div className="border border-red-200 bg-red-50 rounded-xl p-3 mb-4">
+              <p className="text-red-600 text-sm font-medium">{createError.message}</p>
             </div>
           )}
 
           <button
             onClick={handlePlaceOrder}
             disabled={createLoading || hasStockIssues}
-            className="w-full flex items-center justify-center gap-2 bg-black text-white py-3 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] disabled:hover:translate-y-0 transition-all"
+            className="w-full flex items-center justify-center gap-2 bg-slate-950 text-white py-3 text-sm font-medium rounded-xl hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {createLoading ? (
               <>
@@ -244,14 +242,13 @@ export function Cart() {
           </button>
 
           {hasStockIssues && (
-            <p className="text-red-600 text-xs font-medium mt-2 text-center">
+            <p className="text-red-500 text-xs font-medium mt-2 text-center">
               Fix stock issues above before placing your order
             </p>
           )}
         </div>
       </main>
 
-      {/* Checkout slide panel */}
       {checkoutOrderData && (
         <CheckoutSheet
           order={checkoutOrderData}

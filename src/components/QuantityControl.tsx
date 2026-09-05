@@ -22,26 +22,26 @@ export function QuantityControl({
   const canDecrease = quantity > 1
 
   return (
-    <div className="flex items-center border-2 border-black">
+    <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden">
       <button
         onClick={onDecrease}
         disabled={!canDecrease || decreaseLoading}
         aria-label="Decrease quantity"
         className={cn(
-          'p-2 transition-colors border-r-2 border-black',
+          'p-2 transition-colors',
           canDecrease && !decreaseLoading
-            ? 'bg-white hover:bg-stone-100 text-black cursor-pointer'
-            : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+            ? 'bg-white hover:bg-slate-50 text-slate-700 cursor-pointer'
+            : 'bg-slate-50 text-slate-300 cursor-not-allowed'
         )}
       >
         {decreaseLoading ? (
-          <span className="size-4 block border-2 border-stone-300 border-t-stone-700 rounded-full animate-spin" />
+          <span className="size-4 block border-2 border-slate-200 border-t-slate-500 rounded-full animate-spin" />
         ) : (
           <Minus className="size-4" />
         )}
       </button>
 
-      <span className="px-4 py-2 text-sm font-bold text-black min-w-[3rem] text-center select-none">
+      <span className="px-4 py-2 text-sm font-medium text-slate-900 min-w-[3rem] text-center select-none">
         {quantity}
       </span>
 
@@ -50,14 +50,14 @@ export function QuantityControl({
         disabled={!canIncrease || increaseLoading}
         aria-label="Increase quantity"
         className={cn(
-          'p-2 transition-colors border-l-2 border-black',
+          'p-2 transition-colors',
           canIncrease && !increaseLoading
-            ? 'bg-white hover:bg-stone-100 text-black cursor-pointer'
-            : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+            ? 'bg-white hover:bg-slate-50 text-slate-700 cursor-pointer'
+            : 'bg-slate-50 text-slate-300 cursor-not-allowed'
         )}
       >
         {increaseLoading ? (
-          <span className="size-4 block border-2 border-stone-300 border-t-stone-700 rounded-full animate-spin" />
+          <span className="size-4 block border-2 border-slate-200 border-t-slate-500 rounded-full animate-spin" />
         ) : (
           <Plus className="size-4" />
         )}

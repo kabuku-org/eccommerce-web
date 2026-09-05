@@ -54,50 +54,48 @@ export function CheckoutSheet({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Overlay */}
-      <div className="fixed inset-0 bg-black/40" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Slide panel */}
-      <div className="relative w-full max-w-md bg-white shadow-xl flex flex-col animate-slide-in-right">
+      <div className="relative w-full max-w-md bg-white shadow-2xl flex flex-col animate-slide-in-right">
         {/* Header */}
-        <div className="px-6 py-4 border-b-2 border-black flex items-center justify-between">
-          <h2 className="text-lg font-black uppercase tracking-wide text-black">Checkout</h2>
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-slate-900">Checkout</h2>
           <button
             onClick={onClose}
             aria-label="Close checkout"
-            className="text-stone-400 hover:text-black transition-colors"
+            className="text-slate-400 hover:text-slate-700 transition-colors p-1 rounded-lg hover:bg-slate-100"
           >
             <X className="size-5" />
           </button>
         </div>
 
         {/* Stepper */}
-        <div className="px-6 py-4 border-b border-stone-100">
+        <div className="px-6 py-4 border-b border-slate-100">
           <div className="flex items-center gap-1">
             {steps.map((s, i) => (
               <div key={s.key} className="flex items-center gap-1 flex-1">
                 <div
-                  className={`flex items-center justify-center size-7 text-xs font-bold ${
+                  className={`flex items-center justify-center size-7 rounded-full text-xs font-semibold transition-colors ${
                     i < currentStepIndex
-                      ? "bg-green-600 text-white"
+                      ? "bg-emerald-500 text-white"
                       : i === currentStepIndex
-                      ? "bg-black text-white"
-                      : "bg-stone-200 text-stone-400"
+                      ? "bg-slate-950 text-white"
+                      : "bg-slate-100 text-slate-400"
                   }`}
                 >
                   {i < currentStepIndex ? <Check className="size-3.5" /> : i + 1}
                 </div>
                 {i < steps.length - 1 && (
                   <div
-                    className={`h-0.5 flex-1 ${
-                      i < currentStepIndex ? "bg-green-600" : "bg-stone-200"
+                    className={`h-0.5 flex-1 rounded-full transition-colors ${
+                      i < currentStepIndex ? "bg-emerald-500" : "bg-slate-100"
                     }`}
                   />
                 )}
               </div>
             ))}
           </div>
-          <p className="text-xs text-stone-500 text-center mt-2 font-bold uppercase tracking-wider">
+          <p className="text-xs text-slate-500 text-center mt-2 font-medium">
             {steps[currentStepIndex]?.label}
           </p>
         </div>
@@ -107,16 +105,18 @@ export function CheckoutSheet({
           {/* Step 1: User Details */}
           {step === "details" && (
             <div className="space-y-5">
-              <div className="flex items-center gap-3 p-4 border-2 border-black bg-stone-50">
-                <User className="size-8 text-black bg-yellow-300 p-1.5" />
+              <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl">
+                <div className="size-10 bg-slate-200 rounded-full flex items-center justify-center">
+                  <User className="size-5 text-slate-600" />
+                </div>
                 <div>
-                  <p className="text-sm font-bold text-black">{user?.name ?? "User"}</p>
-                  <p className="text-xs text-stone-500">{user?.email ?? ""}</p>
+                  <p className="text-sm font-medium text-slate-900">{user?.name ?? "User"}</p>
+                  <p className="text-xs text-slate-500">{user?.email ?? ""}</p>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="checkout-email" className="text-xs font-bold uppercase tracking-wider text-stone-700 block mb-1.5">
+                <label htmlFor="checkout-email" className="text-sm font-medium text-slate-700 block mb-1.5">
                   Email for receipt <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -125,7 +125,7 @@ export function CheckoutSheet({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                  className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
                 />
               </div>
             </div>
@@ -137,27 +137,27 @@ export function CheckoutSheet({
               <div className="flex gap-3">
                 <button
                   onClick={() => setDeliveryMode("delivery")}
-                  className={`flex-1 flex flex-col items-center gap-2 p-4 border-2 transition-all ${
+                  className={`flex-1 flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
                     deliveryMode === "delivery"
-                      ? "border-black bg-yellow-300 shadow-[3px_3px_0px_0px_#000]"
-                      : "border-stone-200 hover:border-black"
+                      ? "border-slate-950 bg-slate-50"
+                      : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
-                  <MapPin className={`size-8 ${deliveryMode === "delivery" ? "text-black" : "text-stone-400"}`} />
-                  <span className={`text-sm font-bold uppercase tracking-wider ${deliveryMode === "delivery" ? "text-black" : "text-stone-600"}`}>
+                  <MapPin className={`size-8 ${deliveryMode === "delivery" ? "text-slate-950" : "text-slate-400"}`} />
+                  <span className={`text-sm font-medium ${deliveryMode === "delivery" ? "text-slate-950" : "text-slate-600"}`}>
                     Delivery
                   </span>
                 </button>
                 <button
                   onClick={() => setDeliveryMode("pickup")}
-                  className={`flex-1 flex flex-col items-center gap-2 p-4 border-2 transition-all ${
+                  className={`flex-1 flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
                     deliveryMode === "pickup"
-                      ? "border-black bg-yellow-300 shadow-[3px_3px_0px_0px_#000]"
-                      : "border-stone-200 hover:border-black"
+                      ? "border-slate-950 bg-slate-50"
+                      : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
-                  <Store className={`size-8 ${deliveryMode === "pickup" ? "text-black" : "text-stone-400"}`} />
-                  <span className={`text-sm font-bold uppercase tracking-wider ${deliveryMode === "pickup" ? "text-black" : "text-stone-600"}`}>
+                  <Store className={`size-8 ${deliveryMode === "pickup" ? "text-slate-950" : "text-slate-400"}`} />
+                  <span className={`text-sm font-medium ${deliveryMode === "pickup" ? "text-slate-950" : "text-slate-600"}`}>
                     Pickup
                   </span>
                 </button>
@@ -165,7 +165,7 @@ export function CheckoutSheet({
 
               {deliveryMode === "delivery" && (
                 <div>
-                  <label htmlFor="delivery-address" className="text-xs font-bold uppercase tracking-wider text-stone-700 block mb-1.5">
+                  <label htmlFor="delivery-address" className="text-sm font-medium text-slate-700 block mb-1.5">
                     Delivery Address <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -174,14 +174,14 @@ export function CheckoutSheet({
                     onChange={(e) => setDeliveryAddress(e.target.value)}
                     placeholder="Enter your full delivery address..."
                     rows={3}
-                    className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 resize-none"
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 resize-none transition-all"
                   />
                 </div>
               )}
 
               {deliveryMode === "pickup" && (
                 <div>
-                  <label htmlFor="pickup-location" className="text-xs font-bold uppercase tracking-wider text-stone-700 block mb-1.5">
+                  <label htmlFor="pickup-location" className="text-sm font-medium text-slate-700 block mb-1.5">
                     Pickup Location <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -190,7 +190,7 @@ export function CheckoutSheet({
                     value={pickupLocation}
                     onChange={(e) => setPickupLocation(e.target.value)}
                     placeholder="e.g. Nairobi Store, Mombasa Road..."
-                    className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
                   />
                 </div>
               )}
@@ -200,29 +200,29 @@ export function CheckoutSheet({
           {/* Step 3: Review Order */}
           {step === "review" && (
             <div className="space-y-4">
-              <div className="border-2 border-black p-3 bg-stone-50">
-                <p className="text-xs text-stone-500 font-bold uppercase tracking-wider">Receipt email</p>
-                <p className="text-sm font-bold text-black mt-1">{email}</p>
+              <div className="bg-slate-50 rounded-2xl p-3 space-y-1">
+                <p className="text-xs text-slate-500 font-medium">Receipt email</p>
+                <p className="text-sm font-medium text-slate-900">{email}</p>
               </div>
 
-              <div className="border-2 border-black p-3 bg-stone-50">
-                <p className="text-xs text-stone-500 font-bold uppercase tracking-wider">
+              <div className="bg-slate-50 rounded-2xl p-3 space-y-1">
+                <p className="text-xs text-slate-500 font-medium">
                   {deliveryMode === "delivery" ? "Delivery Address" : "Pickup Location"}
                 </p>
-                <p className="text-sm font-bold text-black mt-1">
+                <p className="text-sm font-medium text-slate-900">
                   {deliveryMode === "delivery" ? deliveryAddress : pickupLocation}
                 </p>
               </div>
 
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-stone-900 mb-2">Order Items</p>
+                <p className="text-sm font-medium text-slate-900 mb-2">Order Items</p>
                 <div className="space-y-2">
                   {order.cart.map((item, i) => (
-                    <div key={i} className="flex justify-between text-sm border-b border-stone-100 pb-2">
-                      <span className="text-stone-600">
+                    <div key={i} className="flex justify-between text-sm border-b border-slate-100 pb-2">
+                      <span className="text-slate-600">
                         {item.name} × {item.quantity}
                       </span>
-                      <span className="font-bold text-black">
+                      <span className="font-medium text-slate-900">
                         KES {(item.price * item.quantity).toLocaleString()}
                       </span>
                     </div>
@@ -230,9 +230,9 @@ export function CheckoutSheet({
                 </div>
               </div>
 
-              <div className="border-t-2 border-black pt-3 flex justify-between">
-                <span className="font-black text-black uppercase tracking-wider text-sm">Total</span>
-                <span className="font-black text-black text-lg">
+              <div className="border-t border-slate-200 pt-3 flex justify-between">
+                <span className="font-medium text-slate-900">Total</span>
+                <span className="font-semibold text-slate-900 text-lg">
                   KES {order.totalAmount.toLocaleString()}
                 </span>
               </div>
@@ -244,21 +244,21 @@ export function CheckoutSheet({
             <div className="text-center py-8 space-y-4">
               {checkoutLoading ? (
                 <>
-                  <div className="size-16 border-4 border-stone-200 border-t-black rounded-full animate-spin mx-auto" />
-                  <p className="text-stone-600 text-sm font-medium">Processing your payment...</p>
+                  <div className="size-16 border-4 border-slate-200 border-t-slate-950 rounded-full animate-spin mx-auto" />
+                  <p className="text-slate-500 text-sm">Processing your payment...</p>
                 </>
               ) : (
                 <>
-                  <div className="size-16 bg-green-100 border-2 border-green-600 flex items-center justify-center mx-auto">
-                    <Check className="size-8 text-green-600" />
+                  <div className="size-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto">
+                    <Check className="size-8 text-emerald-500" />
                   </div>
-                  <p className="text-lg font-black uppercase tracking-wide text-black">Payment Successful!</p>
-                  <p className="text-sm text-stone-500">
+                  <p className="text-lg font-semibold text-slate-900">Payment Successful!</p>
+                  <p className="text-sm text-slate-500">
                     Your order has been placed. You'll receive a confirmation at {email}.
                   </p>
                   <button
                     onClick={onClose}
-                    className="mt-4 px-6 py-2 bg-black text-white text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all"
+                    className="mt-4 px-6 py-2 bg-slate-950 text-white text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors"
                   >
                     Done
                   </button>
@@ -270,7 +270,7 @@ export function CheckoutSheet({
 
         {/* Footer navigation */}
         {step !== "pay" && (
-          <div className="px-6 py-4 border-t-2 border-black flex items-center justify-between">
+          <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <button
               onClick={() => {
                 if (currentStepIndex > 0) {
@@ -278,7 +278,7 @@ export function CheckoutSheet({
                 }
               }}
               disabled={currentStepIndex === 0}
-              className="flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-stone-600 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="size-4" />
               Back
@@ -287,7 +287,7 @@ export function CheckoutSheet({
             {step === "review" ? (
               <button
                 onClick={handlePay}
-                className="flex items-center gap-1 px-5 py-2 bg-black text-white text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all"
+                className="flex items-center gap-1 px-5 py-2 bg-slate-950 text-white text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors"
               >
                 <CreditCard className="size-4" />
                 Pay Now
@@ -303,7 +303,7 @@ export function CheckoutSheet({
                   (step === "details" && !canProceedFromDetails) ||
                   (step === "fulfillment" && !canProceedFromFulfillment)
                 }
-                className="flex items-center gap-1 px-5 py-2 bg-black text-white text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)] disabled:hover:translate-y-0 transition-all"
+                className="flex items-center gap-1 px-5 py-2 bg-slate-950 text-white text-sm font-medium rounded-xl hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Continue
                 <ChevronRight className="size-4" />

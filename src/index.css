@@ -2,7 +2,6 @@
 
 @theme {
   --animate-slide-in-right: slide-in-right 0.3s ease-out;
-  --color-cream: #faf9f6;
 
   @keyframes slide-in-right {
     from {
@@ -23,6 +22,7 @@
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-slate-50);
   }
 
   #root {

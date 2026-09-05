@@ -16,7 +16,7 @@ export function NavBar() {
     <nav className="bg-stone-900 text-white px-6 py-4 flex items-center justify-between">
       {/* Left — brand */}
       <Link to="/home" className="font-semibold text-lg tracking-tight">
-        Bookstore
+        Kabuku
       </Link>
 
       {/* Right — links */}

@@ -11,7 +11,7 @@ import { ProductGrid } from '../components/ProductGrid'
 import { ProductGridSkeleton } from '../components/ProductSkeleton'
 import { EmptyProducts } from '../components/EmptyProducts'
 import { FloatingCart } from '../components/FloatingCart'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Pencil, Trash2 } from 'lucide-react'
 
 type FormState = {
   name: string
@@ -81,7 +81,7 @@ export function HomeUser() {
   // ── Guest View ──────────────────────────────────────
   if (isGuest) {
     return (
-      <div className="min-h-screen bg-[#faf9f6]">
+      <div className="min-h-screen bg-slate-50">
         <StoreNavbar />
         <HeroSection isLoggedIn={false} onShopClick={() => navigate('/login')} />
 
@@ -96,12 +96,12 @@ export function HomeUser() {
           {loading && <ProductGridSkeleton />}
 
           {error && (
-            <div className="border-2 border-red-300 bg-red-50 p-6 text-center">
+            <div className="border border-red-200 bg-red-50 rounded-2xl p-6 text-center">
               <AlertTriangle className="size-8 text-red-400 mx-auto mb-3" />
-              <p className="text-red-700 font-bold uppercase tracking-wide text-sm">
+              <p className="text-red-700 font-semibold text-sm">
                 Failed to load products
               </p>
-              <p className="text-red-600 text-sm mt-1">{error.message}</p>
+              <p className="text-red-500 text-sm mt-1">{error.message}</p>
             </div>
           )}
 
@@ -114,23 +114,23 @@ export function HomeUser() {
           )}
 
           {/* Guest CTA */}
-          <div className="mt-16 border-2 border-black bg-white shadow-[8px_8px_0px_0px_#000] p-10 text-center">
-            <h2 className="text-2xl font-black uppercase tracking-tight text-black mb-3">
+          <div className="mt-16 border border-slate-200 bg-white rounded-2xl p-10 text-center shadow-sm">
+            <h2 className="text-2xl font-semibold text-slate-900 mb-3">
               Sign in to shop
             </h2>
-            <p className="text-stone-500 text-sm mb-6 max-w-md mx-auto">
-              Create an account to start adding books to your cart and placing orders.
+            <p className="text-slate-500 text-sm mb-6 max-w-md mx-auto">
+              Create an account to start adding products to your cart and placing orders.
             </p>
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => navigate('/login')}
-                className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all"
+                className="bg-slate-950 text-white px-8 py-3 text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors"
               >
                 Sign in
               </button>
               <button
                 onClick={() => navigate('/signup')}
-                className="bg-white text-black px-8 py-3 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all"
+                className="bg-white text-slate-700 px-8 py-3 text-sm font-medium border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
               >
                 Create account
               </button>
@@ -144,7 +144,7 @@ export function HomeUser() {
   // ── Customer View ───────────────────────────────────
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-[#faf9f6]">
+      <div className="min-h-screen bg-slate-50">
         <StoreNavbar />
         <HeroSection isLoggedIn={true} onShopClick={() => {
           document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })
@@ -161,12 +161,12 @@ export function HomeUser() {
           {loading && <ProductGridSkeleton />}
 
           {error && (
-            <div className="border-2 border-red-300 bg-red-50 p-6 text-center">
+            <div className="border border-red-200 bg-red-50 rounded-2xl p-6 text-center">
               <AlertTriangle className="size-8 text-red-400 mx-auto mb-3" />
-              <p className="text-red-700 font-bold uppercase tracking-wide text-sm">
+              <p className="text-red-700 font-semibold text-sm">
                 Failed to load products
               </p>
-              <p className="text-red-600 text-sm mt-1">{error.message}</p>
+              <p className="text-red-500 text-sm mt-1">{error.message}</p>
             </div>
           )}
 
@@ -196,7 +196,7 @@ export function HomeUser() {
   return <AdminDashboard />
 }
 
-// ── Admin Dashboard (separate component) ─────────────
+// ── Admin Dashboard ──────────────────────────────────
 function AdminDashboard() {
   const {
     products,
@@ -308,17 +308,17 @@ function AdminDashboard() {
     if (product.stock <= 0) return
     try {
       addItem(product.id)
-    } catch (err) {
-      console.error('Failed to add item to cart:', err)
+    } catch {
+      console.error('Failed to add item to cart')
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f6]">
+    <div className="min-h-screen bg-slate-50">
       <StoreNavbar />
 
       <main className="max-w-7xl mx-auto px-6 py-10">
-        <h1 className="text-3xl font-black uppercase tracking-tight text-black mb-8">
+        <h1 className="text-2xl font-semibold text-slate-900 mb-8">
           Admin Dashboard
         </h1>
 
@@ -331,22 +331,22 @@ function AdminDashboard() {
           ].map((m) => (
             <div
               key={m.label}
-              className="border-2 border-black bg-white p-5 shadow-[4px_4px_0px_0px_#000]"
+              className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"
             >
-              <p className="text-stone-500 text-xs font-bold uppercase tracking-widest">{m.label}</p>
-              <p className="text-3xl font-black text-black mt-1">{m.value}</p>
+              <p className="text-slate-500 text-sm">{m.label}</p>
+              <p className="text-2xl font-semibold text-slate-900 mt-1">{m.value}</p>
             </div>
           ))}
         </div>
 
         {/* Feedback message */}
         {message && (
-          <div className="mb-6 border-2 border-green-300 bg-green-50 text-green-800 text-sm px-4 py-3 flex justify-between items-center">
+          <div className="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm px-4 py-3 rounded-xl flex justify-between items-center">
             <span className="font-medium">{message}</span>
             <button
               onClick={() => setMessage('')}
               aria-label="Dismiss message"
-              className="font-bold text-green-700 hover:text-green-900 ml-4"
+              className="font-semibold text-emerald-600 hover:text-emerald-800 ml-4"
             >
               ×
             </button>
@@ -354,8 +354,8 @@ function AdminDashboard() {
         )}
 
         {/* Create / Edit form */}
-        <div className="border-2 border-black bg-white p-6 mb-10 shadow-[6px_6px_0px_0px_#000]">
-          <h2 className="text-lg font-black uppercase tracking-wide text-black mb-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 mb-10 shadow-sm">
+          <h2 className="text-base font-semibold text-slate-900 mb-4">
             {editing ? `Editing: ${editing.name}` : 'Add New Product'}
           </h2>
 
@@ -364,31 +364,31 @@ function AdminDashboard() {
             className="grid grid-cols-2 gap-4"
           >
             <div className="col-span-2 sm:col-span-1">
-              <label htmlFor="form-name" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Name</label>
+              <label htmlFor="form-name" className="block text-sm text-slate-600 mb-1">Name</label>
               <input
                 id="form-name"
                 name="name"
                 value={form.name}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
               />
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <label htmlFor="form-desc" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Description</label>
+              <label htmlFor="form-desc" className="block text-sm text-slate-600 mb-1">Description</label>
               <input
                 id="form-desc"
                 name="description"
                 value={form.description}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
               />
             </div>
 
             <div>
-              <label htmlFor="form-price" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Price (KES)</label>
+              <label htmlFor="form-price" className="block text-sm text-slate-600 mb-1">Price (KES)</label>
               <input
                 id="form-price"
                 name="price"
@@ -398,12 +398,12 @@ function AdminDashboard() {
                 value={form.price}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
               />
             </div>
 
             <div>
-              <label htmlFor="form-stock" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Stock</label>
+              <label htmlFor="form-stock" className="block text-sm text-slate-600 mb-1">Stock</label>
               <input
                 id="form-stock"
                 name="stock"
@@ -412,24 +412,24 @@ function AdminDashboard() {
                 value={form.stock}
                 onChange={handleFormChange}
                 required
-                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
               />
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <label htmlFor="form-image" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Image URL</label>
+              <label htmlFor="form-image" className="block text-sm text-slate-600 mb-1">Image URL</label>
               <input
                 id="form-image"
                 name="imageUrl"
                 value={form.imageUrl}
                 onChange={handleFormChange}
                 placeholder="https://example.com/image.jpg"
-                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
               />
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <label htmlFor="form-discount-price" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Discount Price (KES)</label>
+              <label htmlFor="form-discount-price" className="block text-sm text-slate-600 mb-1">Discount Price (KES)</label>
               <input
                 id="form-discount-price"
                 name="discountPrice"
@@ -439,19 +439,19 @@ function AdminDashboard() {
                 value={form.discountPrice}
                 onChange={handleFormChange}
                 placeholder="Optional"
-                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
               />
             </div>
 
             <div className="col-span-2">
-              <label htmlFor="form-discount-tag" className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Discount Tag</label>
+              <label htmlFor="form-discount-tag" className="block text-sm text-slate-600 mb-1">Discount Tag</label>
               <input
                 id="form-discount-tag"
                 name="discountTag"
                 value={form.discountTag}
                 onChange={handleFormChange}
                 placeholder="e.g., Holiday Special (optional)"
-                className="w-full px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all"
               />
             </div>
 
@@ -459,7 +459,7 @@ function AdminDashboard() {
               <button
                 type="submit"
                 disabled={createLoading || updateLoading}
-                className="bg-black text-white px-6 py-2.5 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                className="bg-slate-950 text-white px-6 py-2.5 text-sm font-medium rounded-xl hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {editing
                   ? updateLoading ? 'Saving...' : 'Save Changes'
@@ -470,7 +470,7 @@ function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => { setEditing(null); setForm(emptyForm) }}
-                  className="bg-white text-black px-6 py-2.5 text-sm font-bold uppercase tracking-wider border-2 border-black hover:bg-stone-100 transition-colors"
+                  className="bg-white text-slate-700 px-6 py-2.5 text-sm font-medium border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -482,24 +482,24 @@ function AdminDashboard() {
         {/* Product grid */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-black uppercase tracking-wide text-black">All Products</h2>
+            <h2 className="text-base font-semibold text-slate-900">All Products</h2>
             <input
               type="text"
               placeholder="Search products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               aria-label="Search products"
-              className="px-4 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 w-64"
+              className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all w-64"
             />
           </div>
 
           {loading && <ProductGridSkeleton />}
 
           {error && (
-            <div className="border-2 border-red-300 bg-red-50 p-6 text-center">
+            <div className="border border-red-200 bg-red-50 rounded-2xl p-6 text-center">
               <AlertTriangle className="size-8 text-red-400 mx-auto mb-3" />
-              <p className="text-red-700 font-bold uppercase tracking-wide text-sm">Failed to load products</p>
-              <p className="text-red-600 text-sm mt-1">{error.message}</p>
+              <p className="text-red-700 font-semibold text-sm">Failed to load products</p>
+              <p className="text-red-500 text-sm mt-1">{error.message}</p>
             </div>
           )}
 
@@ -523,14 +523,14 @@ function AdminDashboard() {
         {/* CRUD list */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-black uppercase tracking-wide text-black">Manage Products</h2>
+            <h2 className="text-base font-semibold text-slate-900">Manage Products</h2>
             <input
               type="text"
               placeholder="Search to update or delete..."
               value={adminSearch}
               onChange={(e) => setAdminSearch(e.target.value)}
               aria-label="Search products to manage"
-              className="px-3 py-2 border-2 border-black text-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 w-64"
+              className="px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-950/10 focus:border-slate-300 transition-all w-64"
             />
           </div>
 
@@ -538,11 +538,11 @@ function AdminDashboard() {
             {adminFiltered.map((product: Product) => (
               <div
                 key={product.id}
-                className="border-2 border-black bg-white px-5 py-4 flex items-center justify-between shadow-[3px_3px_0px_0px_#000]"
+                className="bg-white border border-slate-200 rounded-2xl px-5 py-4 flex items-center justify-between shadow-sm"
               >
                 <div>
-                  <p className="font-bold text-black">{product.name}</p>
-                  <p className="text-stone-500 text-sm">
+                  <p className="font-medium text-slate-900">{product.name}</p>
+                  <p className="text-slate-500 text-sm">
                     KES {product.price.toLocaleString()} · {product.stock} in stock
                   </p>
                 </div>
@@ -551,25 +551,18 @@ function AdminDashboard() {
                   <button
                     onClick={() => startEdit(product)}
                     aria-label={`Edit ${product.name}`}
-                    className="flex items-center gap-1 border-2 border-black px-4 py-1.5 text-sm font-bold hover:bg-yellow-300 transition-colors"
+                    className="flex items-center gap-1.5 border border-slate-200 px-4 py-1.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                      <path d="m15 5 4 4" />
-                    </svg>
+                    <Pencil className="size-3.5" />
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(product.id, product.name)}
                     disabled={deleteLoading}
                     aria-label={`Delete ${product.name}`}
-                    className="flex items-center gap-1 bg-red-50 border-2 border-red-300 text-red-700 px-4 py-1.5 text-sm font-bold hover:bg-red-100 disabled:opacity-40 transition-colors"
+                    className="flex items-center gap-1.5 bg-red-50 border border-red-200 text-red-600 px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-red-100 disabled:opacity-40 transition-colors"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 6h18" />
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                    </svg>
+                    <Trash2 className="size-3.5" />
                     Delete
                   </button>
                 </div>

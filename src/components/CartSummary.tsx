@@ -19,30 +19,30 @@ export function CartSummary({ items, total, onClearCart, onCheckout, clearLoadin
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <div className="border-2 border-black bg-white shadow-[6px_6px_0px_0px_#000] p-6">
+    <div className="border border-slate-200 bg-white rounded-2xl p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <ShoppingCart className="size-5" />
-        <h2 className="text-lg font-black uppercase tracking-wide">Order Summary</h2>
+        <ShoppingCart className="size-5 text-slate-700" />
+        <h2 className="text-lg font-semibold text-slate-900">Order Summary</h2>
       </div>
 
       <div className="space-y-2 mb-4">
         {items.map((item, i) => (
-          <div key={i} className="flex justify-between text-sm border-b border-stone-200 pb-2">
-            <span className="text-stone-700">
+          <div key={i} className="flex justify-between text-sm border-b border-slate-100 pb-2">
+            <span className="text-slate-600">
               {item.name} × {item.quantity}
             </span>
-            <span className="font-bold text-black">
+            <span className="font-medium text-slate-900">
               KES {(item.price * item.quantity).toLocaleString()}
             </span>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-between items-center border-t-2 border-black pt-3 mb-4">
-        <span className="text-xs font-bold uppercase tracking-widest text-stone-500">
+      <div className="flex justify-between items-center border-t border-slate-200 pt-3 mb-4">
+        <span className="text-sm text-slate-500">
           Total ({itemCount} {itemCount === 1 ? 'item' : 'items'})
         </span>
-        <span className="text-xl font-black text-black">
+        <span className="text-xl font-semibold text-slate-900">
           KES {total.toLocaleString()}
         </span>
       </div>
@@ -51,7 +51,7 @@ export function CartSummary({ items, total, onClearCart, onCheckout, clearLoadin
         <button
           onClick={onCheckout}
           disabled={createLoading || items.length === 0}
-          className="w-full flex items-center justify-center gap-2 bg-black text-white py-3 text-sm font-bold uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] disabled:hover:translate-y-0 transition-all"
+          className="w-full flex items-center justify-center gap-2 bg-slate-950 text-white py-3 text-sm font-medium rounded-xl hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {createLoading ? (
             <>
@@ -69,12 +69,12 @@ export function CartSummary({ items, total, onClearCart, onCheckout, clearLoadin
         <button
           onClick={onClearCart}
           disabled={clearLoading || items.length === 0}
-          className="w-full flex items-center justify-center gap-2 bg-white text-stone-700 py-2 text-xs font-bold uppercase tracking-wider border-2 border-stone-300 hover:border-black hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          className="w-full flex items-center justify-center gap-2 bg-white text-slate-600 py-2 text-sm font-medium border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {clearLoading ? (
-            <span className="size-3 border-2 border-stone-300 border-t-stone-700 rounded-full animate-spin" />
+            <span className="size-3 border-2 border-slate-200 border-t-slate-500 rounded-full animate-spin" />
           ) : (
-            <Trash2 className="size-3" />
+            <Trash2 className="size-3.5" />
           )}
           {clearLoading ? 'Clearing...' : 'Clear Cart'}
         </button>
